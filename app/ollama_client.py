@@ -5,7 +5,14 @@ from typing import Any, Dict
 
 import requests
 
-from .config import OLLAMA_MODEL, OLLAMA_RETRIES, OLLAMA_SEED, OLLAMA_TIMEOUT, OLLAMA_URL
+from .config import (
+    OLLAMA_MAX_OUTPUT_TOKENS,
+    OLLAMA_MODEL,
+    OLLAMA_RETRIES,
+    OLLAMA_SEED,
+    OLLAMA_TIMEOUT,
+    OLLAMA_URL,
+)
 
 
 class OllamaError(RuntimeError):
@@ -19,7 +26,7 @@ def chat_json(
     user_prompt: str,
     model: str | None = None,
     timeout: float | None = None,
-    max_output_tokens: int = 2048,
+    max_output_tokens: int = OLLAMA_MAX_OUTPUT_TOKENS,
     device: str = "auto",
 ) -> Dict[str, Any]:
     # Sendet den Analyseprompt an Ollama und erwartet eine JSON-Antwort.
@@ -47,7 +54,7 @@ def chat_json(
     }
 
     last_error: OllamaError | None = None
-    for attempt in range(OLLAMA_RETRIES + 1):
+    for attempt in range(OLLAMA_RETRIES):
         try:
             response = requests.post(
                 f"{OLLAMA_URL}/api/chat",
@@ -60,18 +67,26 @@ def chat_json(
             if not isinstance(result.get("matches"), list):
                 raise OllamaError("Ollama-JSON enthält keine gültige 'matches'-Liste.")
             return result
-        except requests.RequestException as exc:
+        except requests.Timeout as exc:
+            last_error = OllamaError(f"Ollama-Timeout nach {timeout or OLLAMA_TIMEOUT} Sekunden: {exc}")
+        except requests.ConnectionError as exc:
             last_error = OllamaError(
                 f"Ollama ist nicht erreichbar: {exc}. Läuft 'ollama serve' und ist das Modell vorhanden?"
             )
-        except (KeyError, json.JSONDecodeError, TypeError) as exc:
+        except requests.HTTPError as exc:
+            if exc.response is None or exc.response.status_code < 500:
+                raise OllamaError(f"Ollama-HTTP-Fehler: {exc}") from exc
+            last_error = OllamaError(f"Ollama-Serverfehler: {exc}")
+        except requests.RequestException as exc:
+            raise OllamaError(f"Ollama-Anfrage fehlgeschlagen: {exc}") from exc
+        except (KeyError, json.JSONDecodeError, TypeError):
             last_error = OllamaError(
                 "Ollama hat keine gültige JSON-Antwort geliefert."
             )
         except OllamaError as exc:
             last_error = exc
 
-        if attempt < OLLAMA_RETRIES:
+        if attempt < OLLAMA_RETRIES - 1:
             time.sleep(0.5 * (attempt + 1))
 
     raise last_error or OllamaError("Ollama-Aufruf fehlgeschlagen.")

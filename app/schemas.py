@@ -24,6 +24,9 @@ class AnalysisResponse(BaseModel):
     transcript: str
     matches: List[Match]
     model: str
+    duration_seconds: float | None = None
+    chunk_count: int = 0
+    failed_chunks: list[int] = Field(default_factory=list)
 
 
 class AnalysisRequest(BaseModel):

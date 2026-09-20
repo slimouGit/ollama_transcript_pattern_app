@@ -39,10 +39,10 @@
         <option value="cpu">Nur CPU</option>
       </select>
       <label for="timeout">Timeout in Sekunden</label>
-      <input id="timeout" type="number" min="5" max="600" step="1" value="180" />
+      <input id="timeout" type="number" min="5" max="600" step="1" value="300" />
       <label for="chunkSize">Chunk-Größe in Zeichen</label>
-      <input id="chunkSize" type="number" min="500" max="20000" step="100" value="3000" />
-      <div class="muted">Maximale Ausgabetokens: <span id="outputTokens">1500</span></div>
+      <input id="chunkSize" type="number" min="500" max="20000" step="100" value="6000" />
+      <div class="muted">Maximale Ausgabetokens: <span id="outputTokens">512</span></div>
       <br />
       <button onclick="analyzeInterview()">Interview analysieren</button>
     </section>
@@ -65,7 +65,7 @@ function setStatus(text) {
 // Hält die sichtbare Schätzung mit dem Backend-Limit synchron.
 function updateOutputTokens() {
   const chunkSize = Number(document.getElementById('chunkSize').value) || 0;
-  const outputTokens = Math.max(512, Math.min(2048, Math.floor(chunkSize / 2)));
+  const outputTokens = Math.max(128, Math.min(512, Math.floor(chunkSize / 2)));
   document.getElementById('outputTokens').textContent = outputTokens;
 }
 

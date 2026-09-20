@@ -1,4 +1,6 @@
+import logging
 import re
+import time
 
 from .config import (
     ABBREVIATION_PATTERN,
@@ -7,10 +9,13 @@ from .config import (
     PERIOD_MARKER,
     output_tokens_for_chunk,
 )
-from .ollama_client import OLLAMA_MODEL, chat_json
+from .ollama_client import OLLAMA_MODEL, OllamaError, chat_json
 from .patterns import DEFAULT_PATTERNS
 from .prompts import SYSTEM_PROMPT, build_user_prompt
 from .schemas import AnalysisResponse, Match
+
+
+logger = logging.getLogger(__name__)
 
 
 def split_sentences(text: str) -> list[str]:
@@ -179,20 +184,49 @@ def analyze_transcript(
     device: str = "auto",
 ) -> AnalysisResponse:
     chunks = chunk_text(transcript, max_chars=chunk_size or CHUNK_SIZE)
+    started_at = time.perf_counter()
 
     all_matches = []
+    failed_chunks = []
 
-    for chunk in chunks:
-        all_matches.extend(
-            analyze_chunk(chunk, model=model, timeout=timeout, device=device)
-        )
+    for chunk_index, chunk in enumerate(chunks, start=1):
+        chunk_started_at = time.perf_counter()
+        try:
+            all_matches.extend(
+                analyze_chunk(chunk, model=model, timeout=timeout, device=device)
+            )
+        except OllamaError as exc:
+            failed_chunks.append(chunk_index)
+            logger.warning(
+                "Chunk %d/%d fehlgeschlagen und wird übersprungen: %s",
+                chunk_index,
+                len(chunks),
+                exc,
+            )
+        finally:
+            logger.info(
+                "Chunk %d/%d verarbeitet in %.2f Sekunden",
+                chunk_index,
+                len(chunks),
+                time.perf_counter() - chunk_started_at,
+            )
 
     all_matches = remove_duplicate_matches(
         all_matches
+    )
+    duration_seconds = round(time.perf_counter() - started_at, 3)
+    logger.info(
+        "Analyse abgeschlossen: %d Chunks, %d fehlgeschlagen, %.2f Sekunden",
+        len(chunks),
+        len(failed_chunks),
+        duration_seconds,
     )
 
     return AnalysisResponse(
         transcript=transcript,
         matches=all_matches,
         model=model or OLLAMA_MODEL,
+        duration_seconds=duration_seconds,
+        chunk_count=len(chunks),
+        failed_chunks=failed_chunks,
     )
