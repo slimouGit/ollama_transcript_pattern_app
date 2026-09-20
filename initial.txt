@@ -1,0 +1,22 @@
+# 1) Verfügbare Python-Version prüfen
+python --version
+Get-Command python
+
+# 2) Alte virtuelle Umgebung löschen (im Projektordner)
+Remove-Item -Recurse -Force .\.venv
+
+# 3) Neue virtuelle Umgebung erstellen
+python -m venv .venv
+
+# 4) Falls Aktivierung in PowerShell geblockt ist, Execution Policy setzen (optional)
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+
+# 5) venv aktivieren
+.\.venv\Scripts\Activate.ps1
+
+# 6) Abhängigkeiten installieren
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+# 7) App starten
+python -m uvicorn app.main:app --reload

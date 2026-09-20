@@ -1,0 +1,329 @@
+Hallo und herzlich willkommen zu einem neuen Anamnese-Gespräch. Auch diesmal möchten wir Ihnen zunächst keine Verdachtsdiagnose nennen. Hören Sie aufmerksam zu, notieren Sie sich die wichtigsten Informationen und überlegen Sie am Ende selbst, welche Diagnose am wahrscheinlichsten ist.
+
+Wir wünschen Ihnen viel Erfolg beim Zuhören und Mitschreiben.
+
+**Ärztin:** Guten Tag. Mein Name ist Dr. Schneider. Ich bin Assistenzärztin hier in der Notaufnahme und würde gerne das Aufnahmegespräch mit Ihnen führen. Ist das für Sie in Ordnung?
+
+**Patient:** Ja, natürlich.
+
+**Ärztin:** Bevor wir anfangen: Wie geht es Ihnen im Moment? Können wir uns in Ruhe unterhalten?
+
+**Patient:** Ja, schon. Mir ist nur ziemlich übel und der Bauch tut weh.
+
+**Ärztin:** Verstehe. Wenn die Schmerzen während unseres Gesprächs stärker werden, sagen Sie mir bitte sofort Bescheid.
+
+**Patient:** Ja, mache ich.
+
+**Ärztin:** Dann benötige ich zunächst einige persönliche Angaben. Wie heißen Sie?
+
+**Patient:** Daniel Hoffmann.
+
+**Ärztin:** Können Sie Ihren Nachnamen bitte kurz buchstabieren?
+
+**Patient:** H-O-F-F-M-A-N-N. Hoffmann mit zwei F und zwei N.
+
+**Ärztin:** Danke. Wie alt sind Sie, Herr Hoffmann?
+
+**Patient:** 41 Jahre.
+
+**Ärztin:** Und wann sind Sie geboren?
+
+**Patient:** Am 18. November 1984.
+
+**Ärztin:** Wie groß sind Sie?
+
+**Patient:** 1,82 Meter.
+
+**Ärztin:** Und wie viel wiegen Sie ungefähr?
+
+**Patient:** Ungefähr 86 Kilo.
+
+**Ärztin:** Haben Sie einen Hausarzt?
+
+**Patient:** Ja, Frau Dr. Weber in Frankfurt.
+
+**Ärztin:** Gut. Dann kommen wir zu Ihren aktuellen Beschwerden. Sie haben gesagt, dass Sie Bauchschmerzen haben. Seit wann bestehen die Schmerzen?
+
+**Patient:** Angefangen hat es gestern Abend. Erst war es nur so ein komisches Gefühl im Bauch. Heute Nacht wurde es dann deutlich schlimmer.
+
+**Ärztin:** Können Sie mir zeigen, wo die Schmerzen genau sind?
+
+**Patient:** Am Anfang waren sie eher hier in der Mitte, ungefähr um den Bauchnabel herum. Aber inzwischen sind sie mehr hier unten rechts.
+
+**Ärztin:** Im rechten Unterbauch?
+
+**Patient:** Ja, genau.
+
+**Ärztin:** Sind die Schmerzen dauerhaft vorhanden oder kommen sie in Wellen?
+
+**Patient:** Eigentlich sind sie inzwischen die ganze Zeit da.
+
+**Ärztin:** Wie stark sind die Schmerzen auf einer Skala von null bis zehn? Null bedeutet keine Schmerzen und zehn bedeutet die stärksten Schmerzen, die Sie sich vorstellen können.
+
+**Patient:** Wenn ich ruhig liege, vielleicht eine Sechs. Wenn ich aufstehe oder mich bewege, eher acht oder neun.
+
+**Ärztin:** Werden die Schmerzen also durch Bewegung verstärkt?
+
+**Patient:** Ja. Beim Gehen ist es besonders schlimm. Auch wenn ich huste oder mich plötzlich bewege.
+
+**Ärztin:** Wie würden Sie den Schmerz beschreiben? Eher stechend, drückend, ziehend, brennend oder krampfartig?
+
+**Patient:** Mittlerweile eher stechend und drückend gleichzeitig.
+
+**Ärztin:** Strahlen die Schmerzen irgendwohin aus? Zum Beispiel in den Rücken, die Leiste oder in die Beine?
+
+**Patient:** Nein, eigentlich nicht.
+
+**Ärztin:** Sie haben außerdem Übelkeit erwähnt. Seit wann ist Ihnen übel?
+
+**Patient:** Seit heute Morgen.
+
+**Ärztin:** Mussten Sie sich übergeben?
+
+**Patient:** Einmal heute früh.
+
+**Ärztin:** Was haben Sie erbrochen? Nahrung oder eher Flüssigkeit?
+
+**Patient:** Eigentlich hauptsächlich das Abendessen von gestern und etwas Flüssigkeit.
+
+**Ärztin:** Haben Sie heute etwas gegessen?
+
+**Patient:** Nein. Ich habe überhaupt keinen Appetit.
+
+**Ärztin:** Ist das ungewöhnlich für Sie?
+
+**Patient:** Sehr. Normalerweise frühstücke ich immer.
+
+**Ärztin:** Haben Sie Fieber gemessen?
+
+**Patient:** Heute Morgen hatte ich 38,2 Grad.
+
+**Ärztin:** Hatten Sie auch Schüttelfrost?
+
+**Patient:** Ein bisschen. Mir war zwischendurch ziemlich kalt.
+
+**Ärztin:** Wie sieht es mit Ihrem Stuhlgang aus? Hatten Sie Durchfall oder Verstopfung?
+
+**Patient:** Nein. Gestern war alles normal. Heute war ich noch nicht auf der Toilette.
+
+**Ärztin:** Haben Sie Blut im Stuhl bemerkt?
+
+**Patient:** Nein.
+
+**Ärztin:** Probleme beim Wasserlassen? Brennen, Schmerzen oder häufigeren Harndrang?
+
+**Patient:** Nein, überhaupt nicht.
+
+**Ärztin:** Haben Sie Blut im Urin gesehen?
+
+**Patient:** Nein.
+
+**Ärztin:** Haben Sie momentan Schmerzen im Rücken oder in der Nierengegend?
+
+**Patient:** Nein.
+
+**Ärztin:** Gab es in den letzten Tagen etwas Besonderes? Haben Sie ungewöhnliche Lebensmittel gegessen oder vielleicht etwas, das verdorben gewesen sein könnte?
+
+**Patient:** Nicht dass ich wüsste. Meine Frau und ich haben gestern dasselbe gegessen und ihr geht es gut.
+
+**Ärztin:** Haben andere Personen in Ihrer Familie ähnliche Beschwerden?
+
+**Patient:** Nein.
+
+**Ärztin:** Haben Sie versucht, etwas gegen die Schmerzen einzunehmen?
+
+**Patient:** Heute Morgen habe ich eine Paracetamol genommen.
+
+**Ärztin:** Wie viel?
+
+**Patient:** Eine Tablette mit 500 Milligramm.
+
+**Ärztin:** Hat das geholfen?
+
+**Patient:** Nicht wirklich.
+
+**Ärztin:** Hatten Sie solche Beschwerden schon einmal?
+
+**Patient:** Nein, noch nie so.
+
+**Ärztin:** Gut. Dann würde ich Ihnen jetzt noch einige Fragen zu Ihrer allgemeinen Gesundheit stellen. Haben Sie bekannte Vorerkrankungen?
+
+**Patient:** Ich habe Bluthochdruck.
+
+**Ärztin:** Seit wann?
+
+**Patient:** Seit ungefähr vier Jahren.
+
+**Ärztin:** Ist der Blutdruck mit Medikamenten gut eingestellt?
+
+**Patient:** Ja, normalerweise schon.
+
+**Ärztin:** Welche Medikamente nehmen Sie regelmäßig ein?
+
+**Patient:** Ramipril, fünf Milligramm morgens.
+
+**Ärztin:** Sonst noch Medikamente?
+
+**Patient:** Nein.
+
+**Ärztin:** Nehmen Sie Nahrungsergänzungsmittel oder pflanzliche Präparate?
+
+**Patient:** Manchmal Magnesium nach dem Sport, aber nicht regelmäßig.
+
+**Ärztin:** Sind bei Ihnen Allergien bekannt?
+
+**Patient:** Ja, gegen Penicillin.
+
+**Ärztin:** Wissen Sie, wie sich die Allergie äußert?
+
+**Patient:** Ich habe als Jugendlicher Penicillin bekommen und danach überall Hautausschlag bekommen. Mein Gesicht war auch etwas angeschwollen.
+
+**Ärztin:** Hatten Sie Atemnot?
+
+**Patient:** Nein, soweit ich weiß nicht.
+
+**Ärztin:** Gut, das notiere ich. Haben Sie andere Allergien, zum Beispiel gegen Lebensmittel oder Latex?
+
+**Patient:** Nein.
+
+**Ärztin:** Sind Sie schon einmal operiert worden?
+
+**Patient:** Ja, am Knie.
+
+**Ärztin:** Was wurde gemacht?
+
+**Patient:** Ein Kreuzbandriss nach einem Fußballunfall.
+
+**Ärztin:** Wann war das?
+
+**Patient:** Vor ungefähr zwölf Jahren.
+
+**Ärztin:** Gab es während oder nach der Operation Komplikationen?
+
+**Patient:** Nein.
+
+**Ärztin:** Wurden Sie sonst schon einmal stationär im Krankenhaus behandelt?
+
+**Patient:** Nein.
+
+**Ärztin:** Sind Ihre Impfungen aktuell?
+
+**Patient:** Soweit ich weiß, ja. Mein Hausarzt schaut regelmäßig danach.
+
+**Ärztin:** Was machen Sie beruflich, Herr Hoffmann?
+
+**Patient:** Ich bin Wirtschaftsprüfer.
+
+**Ärztin:** Arbeiten Sie hauptsächlich im Sitzen?
+
+**Patient:** Ja. Sehr viel Büroarbeit.
+
+**Ärztin:** Treiben Sie regelmäßig Sport?
+
+**Patient:** Normalerweise drei- bis viermal pro Woche. Ich gehe laufen und manchmal ins Fitnessstudio.
+
+**Ärztin:** Rauchen Sie?
+
+**Patient:** Nein. Ich habe früher geraucht, aber vor ungefähr sechs Jahren aufgehört.
+
+**Ärztin:** Wie lange haben Sie vorher geraucht?
+
+**Patient:** Ungefähr zehn Jahre.
+
+**Ärztin:** Und wie viel?
+
+**Patient:** Vielleicht zehn Zigaretten am Tag.
+
+**Ärztin:** Trinken Sie Alkohol?
+
+**Patient:** Gelegentlich. Vielleicht zwei oder drei Bier am Wochenende.
+
+**Ärztin:** Nehmen Sie Drogen oder andere Substanzen?
+
+**Patient:** Nein.
+
+**Ärztin:** Gut. Dann würde ich noch kurz etwas zu Ihrer Familie wissen. Gibt es relevante Erkrankungen bei Ihren Eltern oder Geschwistern?
+
+**Patient:** Mein Vater hat Diabetes Typ 2 und hatte mit 62 einen Herzinfarkt.
+
+**Ärztin:** Wie alt ist Ihr Vater jetzt?
+
+**Patient:** 70.
+
+**Ärztin:** Und wie geht es ihm?
+
+**Patient:** Ganz gut. Er nimmt mehrere Medikamente, aber ansonsten ist er ziemlich fit.
+
+**Ärztin:** Und Ihre Mutter?
+
+**Patient:** Sie ist 68 und gesund.
+
+**Ärztin:** Haben Sie Geschwister?
+
+**Patient:** Eine jüngere Schwester. Sie ist gesund.
+
+**Ärztin:** Gibt es in Ihrer Familie chronische Darmerkrankungen, Darmkrebs oder andere Erkrankungen des Magen-Darm-Traktes?
+
+**Patient:** Nicht dass ich wüsste.
+
+**Ärztin:** Sind Sie verheiratet?
+
+**Patient:** Ja.
+
+**Ärztin:** Haben Sie Kinder?
+
+**Patient:** Zwei. Eine Tochter mit acht und einen Sohn mit fünf Jahren.
+
+**Ärztin:** Leben Sie gemeinsam mit Ihrer Familie?
+
+**Patient:** Ja.
+
+**Ärztin:** Waren Sie in letzter Zeit im Ausland?
+
+**Patient:** Vor ungefähr drei Monaten waren wir in Spanien.
+
+**Ärztin:** Seitdem gab es aber keine gesundheitlichen Probleme?
+
+**Patient:** Nein.
+
+**Ärztin:** Gut. Ich fasse noch einmal kurz zusammen, damit ich sicher bin, dass ich alles richtig verstanden habe: Seit gestern Abend haben Sie Bauchschmerzen. Zunächst waren die Schmerzen eher im Bereich um den Bauchnabel und haben sich im Laufe der Zeit in den rechten Unterbauch verlagert. Die Schmerzen sind inzwischen dauerhaft vorhanden und werden bei Bewegung und Husten stärker. Zusätzlich haben Sie Übelkeit, einmaliges Erbrechen, Appetitlosigkeit und heute Morgen eine Temperatur von 38,2 Grad gehabt.
+
+**Patient:** Ja, genau.
+
+**Ärztin:** Habe ich etwas Wichtiges vergessen?
+
+**Patient:** Nein, das war eigentlich alles.
+
+**Ärztin:** Gut. Als Nächstes würde ich gerne Ihren Bauch untersuchen. Ich werde ihn zunächst anschauen und abhören und anschließend vorsichtig abtasten. Dabei kann es sein, dass einige Stellen unangenehm oder schmerzhaft sind. Sagen Sie mir bitte sofort Bescheid, wenn es zu stark wird.
+
+**Patient:** Okay.
+
+**Ärztin:** Außerdem werden wir Ihnen Blut abnehmen und unter anderem die Entzündungswerte kontrollieren. Wir würden auch gerne eine Urinprobe untersuchen.
+
+**Patient:** Okay.
+
+**Ärztin:** Zusätzlich möchte ich eine Ultraschalluntersuchung des Bauches durchführen. Je nachdem, was wir dabei sehen und wie die Blutwerte ausfallen, können weitere Untersuchungen notwendig werden.
+
+**Patient:** Muss ich denn im Krankenhaus bleiben?
+
+**Ärztin:** Das kann ich im Moment noch nicht sicher sagen. Aufgrund Ihrer Beschwerden sollten wir zunächst die Untersuchungsergebnisse abwarten. Danach bespreche ich den Fall mit dem zuständigen Oberarzt und wir erklären Ihnen genau, wie es weitergeht.
+
+**Patient:** In Ordnung.
+
+**Ärztin:** Bitte essen und trinken Sie vorerst nichts, bis wir die Untersuchungen abgeschlossen haben.
+
+**Patient:** Okay.
+
+**Ärztin:** Haben Sie im Moment noch eine Frage?
+
+**Patient:** Nein. Ich möchte eigentlich nur wissen, woher diese Schmerzen kommen.
+
+**Ärztin:** Das kann ich gut verstehen. Wir versuchen jetzt möglichst schnell herauszufinden, was die Ursache ist. Wenn die Schmerzen stärker werden oder Ihnen plötzlich schlechter wird, sagen Sie bitte sofort Bescheid.
+
+**Patient:** Mache ich.
+
+**Ärztin:** Gut, Herr Hoffmann. Dann beginnen wir jetzt mit der körperlichen Untersuchung und anschließend mit der Blutabnahme und dem Ultraschall.
+
+**Patient:** Alles klar.
+
+**Ärztin:** Danke. Dann sehen wir uns gleich wieder.

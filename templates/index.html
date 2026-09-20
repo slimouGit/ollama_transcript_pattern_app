@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transcript Pattern Analyzer</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+    textarea { width: 100%; min-height: 220px; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    select, input { width: 100%; box-sizing: border-box; padding: 8px; margin-top: 4px; }
+    button { padding: 10px 16px; margin-top: 10px; cursor: pointer; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 14px; margin: 10px 0; }
+    .muted { color: #666; }
+    pre { white-space: pre-wrap; word-break: break-word; }
+    @media (max-width: 800px) { .row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- Die Seite zeigt das feste Interview und die Analyseergebnisse. -->
+  <h1>Transcript Pattern Analyzer</h1>
+  <p class="muted">Wähle ein Transkript aus oder bearbeite den Text direkt vor der Analyse.</p>
+
+  <!-- Bereich zum Anzeigen und Analysieren des geladenen Transcripts. -->
+  <div class="row">
+    <section>
+      <h2>Interview-Transkript</h2>
+      <label for="transcriptFile">Vorhandenes Transkript</label>
+      <select id="transcriptFile"><option value="">Transkripte werden geladen...</option></select>
+      <textarea id="transcript" placeholder="Transkript hier einfügen oder aus der Auswahl laden..."></textarea>
+      <h3>Analyse-Einstellungen</h3>
+      <label for="model">Ollama-Modell</label>
+      <select id="model"><option value="">Standardmodell laden...</option></select>
+      <label for="device">Verarbeitung</label>
+      <select id="device">
+        <option value="auto" selected>Automatisch (GPU/CPU)</option>
+        <option value="gpu">GPU bevorzugen</option>
+        <option value="cpu">Nur CPU</option>
+      </select>
+      <label for="timeout">Timeout in Sekunden</label>
+      <input id="timeout" type="number" min="5" max="600" step="1" value="180" />
+      <label for="chunkSize">Chunk-Größe in Zeichen</label>
+      <input id="chunkSize" type="number" min="500" max="20000" step="100" value="3000" />
+      <div class="muted">Maximale Ausgabetokens: <span id="outputTokens">1500</span></div>
+      <br />
+      <button onclick="analyzeInterview()">Interview analysieren</button>
+    </section>
+  </div>
+
+  <!-- Analyseergebnisse werden hier dynamisch eingefügt. -->
+  <h2>Ergebnis</h2>
+  <div id="status" class="muted"></div>
+  <div id="results"></div>
+
+  <h3>Evaluation</h3>
+  <div id="evaluation"></div>
+
+<script>
+// Zeigt Lade-, Erfolgs- oder Fehlermeldungen an.
+function setStatus(text) {
+  document.getElementById('status').textContent = text;
+}
+
+// Hält die sichtbare Schätzung mit dem Backend-Limit synchron.
+function updateOutputTokens() {
+  const chunkSize = Number(document.getElementById('chunkSize').value) || 0;
+  const outputTokens = Math.max(512, Math.min(2048, Math.floor(chunkSize / 2)));
+  document.getElementById('outputTokens').textContent = outputTokens;
+}
+
+function renderEvaluation(data) {
+  const container = document.getElementById('evaluation');
+  container.innerHTML = '';
+
+  if (!data || !data.evaluation) {
+    container.innerHTML = '<div class="card">Keine Evaluierung verfügbar.</div>';
+    return;
+  }
+
+  const summary = data.evaluation.summary || {};
+  const byPattern = data.evaluation.by_pattern || {};
+
+  const summaryCard = document.createElement('div');
+  summaryCard.className = 'card';
+  summaryCard.innerHTML = `
+    <strong>Gesamtmetriken</strong><br>
+    <div><b>Precision:</b> ${summary.precision ?? 'n/a'}</div>
+    <div><b>Recall:</b> ${summary.recall ?? 'n/a'}</div>
+    <div><b>F1:</b> ${summary.f1 ?? 'n/a'}</div>
+    <div><b>TP:</b> ${summary.tp ?? 0} | <b>FP:</b> ${summary.fp ?? 0} | <b>FN:</b> ${summary.fn ?? 0}</div>
+  `;
+  container.appendChild(summaryCard);
+
+  const patternList = document.createElement('div');
+  patternList.className = 'card';
+  patternList.innerHTML = '<strong>Nach Muster</strong>';
+
+  const entries = Object.entries(byPattern);
+  if (entries.length === 0) {
+    patternList.innerHTML += '<div>Keine Musterwerte vorhanden.</div>';
+    container.appendChild(patternList);
+    return;
+  }
+
+  entries.forEach(([name, values]) => {
+    const item = document.createElement('div');
+    item.style.marginTop = '8px';
+    item.innerHTML = `
+      <div><b>${escapeHtml(name)}</b></div>
+      <div>Precision: ${values.precision ?? 'n/a'}, Recall: ${values.recall ?? 'n/a'}, F1: ${values.f1 ?? 'n/a'}</div>
+    `;
+    patternList.appendChild(item);
+  });
+
+  container.appendChild(patternList);
+}
+
+// Baut aus der API-Antwort die Trefferkarten für das Ergebnis.
+function render(data) {
+  const container = document.getElementById('results');
+  container.innerHTML = '';
+
+  if (!data.matches || data.matches.length === 0) {
+    container.innerHTML += '<div class="card">Keine Muster gefunden.</div>';
+    return;
+  }
+
+  data.matches.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <strong>${escapeHtml(m.pattern)}</strong>
+      <div><b>Treffer:</b> ${escapeHtml(m.evidence)}</div>
+      <div><b>Warum:</b> ${escapeHtml(m.explanation)}</div>
+      <div><b>Confidence:</b> ${m.confidence == null ? 'nicht verfügbar' : `${(m.confidence * 100).toFixed(0)}%`}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Escaped Modelltext, bevor er in HTML eingesetzt wird.
+function escapeHtml(value) {
+  const div = document.createElement('div');
+  div.textContent = String(value);
+  return div.innerHTML;
+}
+
+// Lädt ein ausgewähltes Transkript in die bearbeitbare Textarea.
+async function loadTranscript(filename) {
+  if (!filename) {
+    document.getElementById('transcript').value = '';
+    return;
+  }
+  const response = await fetch(`/transcripts/${encodeURIComponent(filename)}`);
+  const data = await response.json();
+  if (!response.ok) {
+    setStatus(data.detail || 'Transkript konnte nicht geladen werden.');
+    return;
+  }
+  document.getElementById('transcript').value = data.transcript;
+}
+
+// Lädt die verfügbaren Textdateien aus dem data-Ordner.
+async function loadTranscriptFiles() {
+  const response = await fetch('/transcripts');
+  const data = await response.json();
+  const select = document.getElementById('transcriptFile');
+  select.innerHTML = '';
+  if (!response.ok || !data.transcripts || data.transcripts.length === 0) {
+    select.innerHTML = '<option value="">Keine Transkripte verfügbar</option>';
+    return;
+  }
+  data.transcripts.forEach(filename => {
+    const option = document.createElement('option');
+    option.value = filename;
+    option.textContent = filename;
+    select.appendChild(option);
+  });
+  await loadTranscript(select.value);
+}
+
+// Lädt ausschließlich lokal verfügbare Ollama-Modelle.
+async function loadModels() {
+  const response = await fetch('/models');
+  const data = await response.json();
+  const select = document.getElementById('model');
+  select.innerHTML = '';
+  if (!response.ok || !data.models || data.models.length === 0) {
+    select.innerHTML = '<option value="">Keine Modelle verfügbar</option>';
+    return;
+  }
+  data.models.forEach(model => {
+    const option = document.createElement('option');
+    option.value = model;
+    option.textContent = model;
+    select.appendChild(option);
+  });
+}
+
+// Startet die Musteranalyse des vorhandenen Interviews.
+async function analyzeInterview() {
+  setStatus('Analysiere Interview...');
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('evaluation').innerHTML = '<div class="card">Evaluation wird nach der Analyse gestartet.</div>';
+  const response = await fetch('/analyze-interview', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      transcript: document.getElementById('transcript').value,
+      model: document.getElementById('model').value || null,
+      device: document.getElementById('device').value,
+      timeout: Number(document.getElementById('timeout').value),
+      chunk_size: Number(document.getElementById('chunkSize').value)
+    })
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    setStatus(data.detail || 'Fehler');
+    renderEvaluation(null);
+    return;
+  }
+  setStatus(`Fertig. Modell: ${data.model}`);
+  render(data);
+
+  setStatus('Analyse fertig. Werte werden evaluiert...');
+  const evaluationResponse = await fetch('/evaluate');
+  const evaluationData = await evaluationResponse.json();
+  if (evaluationResponse.ok) {
+    renderEvaluation(evaluationData);
+    setStatus(`Analyse und Evaluation fertig. Modell: ${data.model}`);
+  } else {
+    renderEvaluation(null);
+    setStatus(evaluationData.detail || 'Evaluation konnte nicht ausgeführt werden.');
+  }
+}
+
+document.getElementById('chunkSize').addEventListener('input', updateOutputTokens);
+document.getElementById('transcriptFile').addEventListener('change', event => loadTranscript(event.target.value));
+updateOutputTokens();
+
+// Lädt Dateien und Modelle direkt beim Öffnen der Seite.
+Promise.all([loadTranscriptFiles(), loadModels()]).catch(() => setStatus('Einstellungen konnten nicht geladen werden.'));
+</script>
+</body>
+</html>
