@@ -370,11 +370,16 @@ async function loadModels() {
     option.textContent = model;
     select.appendChild(option);
   });
+  await loadDeviceInfo();
 }
 
 async function loadDeviceInfo() {
   try {
-    const response = await fetch('/device-info');
+    const params = new URLSearchParams({
+      requested_device: document.getElementById('device').value,
+      model: document.getElementById('model').value
+    });
+    const response = await fetch(`/device-info?${params}`);
     const data = await response.json();
     renderDeviceInfo(response.ok ? data : null);
   } catch {
@@ -479,6 +484,8 @@ document.getElementById('transcript').addEventListener('input', event => {
     document.getElementById('transcriptStatus').textContent = 'Eigenes Skript bereit.';
   }
 });
+document.getElementById('model').addEventListener('change', loadDeviceInfo);
+document.getElementById('device').addEventListener('change', loadDeviceInfo);
 // Lädt das Standardtranskript und die Modelle direkt beim Öffnen der Seite.
 Promise.all([loadTranscript(), loadModels(), loadDeviceInfo()]).catch(() => setStatus('Einstellungen konnten nicht geladen werden.'));
 </script>
