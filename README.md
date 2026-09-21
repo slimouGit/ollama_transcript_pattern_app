@@ -95,6 +95,13 @@ Die Browser-Oberfläche lädt automatisch `data/interview.txt`. Mit **Interview 
 
 Die API stellt zusätzlich `GET /health` und `GET /transcript` bereit. Die Analyse wird über `POST /analyze-interview` gestartet.
 
+Im Frontend können neben Modell, Verarbeitung, Timeout und Chunk-Größe auch
+`temperature`, `top_k`, `top_p`, `seed` und die maximalen Ausgabetokens eingestellt werden.
+Nach einer abgeschlossenen Evaluation wird automatisch ein vollständiger Textbericht mit
+Zeitstempel unter `analysis_results/` gespeichert. Der Bericht enthält Transkript, Treffer,
+Begründungen, Confidence-Werte, Evaluationsmetriken, Modell, alle Analyseparameter,
+Chunk-Informationen und die Dauer des Laufs.
+
 ## Wichtige Dateien
 
 - `app/main.py` – FastAPI-Endpunkte

@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse
 from .analyzer import analyze_transcript
 from .evaluation import evaluate_matches, load_ground_truth
 from .ollama_client import OLLAMA_MODEL, OllamaError, available_models, health
+from .result_writer import write_analysis_report
 from .schemas import AnalysisRequest, AnalysisResponse
 
 
@@ -16,6 +17,7 @@ TRANSCRIPT_PATH = BASE_DIR / "data" / "interview.txt"
 DATA_DIR = BASE_DIR / "data"
 app = FastAPI(title="Transcript Pattern Analyzer", version="1.0.0")
 latest_analysis: AnalysisResponse | None = None
+latest_request: AnalysisRequest | None = None
 analysis_cache: dict[str, AnalysisResponse] = {}
 analysis_lock = Lock()
 MAX_CACHE_ENTRIES = 32
@@ -96,6 +98,11 @@ def analysis_cache_key(options: AnalysisRequest, transcript: str) -> str:
             options.device,
             str(options.timeout),
             str(options.chunk_size),
+            str(options.temperature),
+            str(options.top_k),
+            str(options.top_p),
+            str(options.seed),
+            str(options.output_tokens),
         ]
     )
     return sha256(settings.encode("utf-8")).hexdigest()
@@ -104,9 +111,10 @@ def analysis_cache_key(options: AnalysisRequest, transcript: str) -> str:
 @app.post("/analyze-interview", response_model=AnalysisResponse)
 def analyze_interview(options: AnalysisRequest | None = None):
     # Analysiert das Interview mit den Optionen dieses Laufs.
-    global latest_analysis
+    global latest_analysis, latest_request
     latest_analysis = None
     options = options or AnalysisRequest()
+    latest_request = options
     transcript_text = options.transcript.strip()
     if not transcript_text:
         raise HTTPException(status_code=422, detail="Das Transkript ist leer.")
@@ -124,6 +132,11 @@ def analyze_interview(options: AnalysisRequest | None = None):
                 timeout=options.timeout,
                 chunk_size=options.chunk_size,
                 device=options.device,
+                temperature=options.temperature,
+                top_k=options.top_k,
+                top_p=options.top_p,
+                seed=options.seed,
+                output_tokens=options.output_tokens,
             )
         except OllamaError as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc
@@ -137,7 +150,7 @@ def analyze_interview(options: AnalysisRequest | None = None):
 @app.get("/evaluate")
 def evaluate_current_analysis():
     """Bewertet ausschließlich das zuletzt gespeicherte Analyseergebnis."""
-    if latest_analysis is None:
+    if latest_analysis is None or latest_request is None:
         raise HTTPException(
             status_code=409,
             detail="Bitte zuerst die Analyse ausführen.",
@@ -149,10 +162,24 @@ def evaluate_current_analysis():
         for match in latest_analysis.matches
     ]
 
-    return {
+    result = {
         "model": latest_analysis.model,
         "ground_truth_loaded": bool(ground_truth),
         "evaluation": evaluate_matches(predictions, ground_truth),
     }
+    try:
+        report_path = write_analysis_report(
+            latest_analysis,
+            latest_request,
+            {
+                "ground_truth_loaded": result["ground_truth_loaded"],
+                **result["evaluation"],
+            },
+        )
+    except OSError as exc:
+        raise HTTPException(status_code=500, detail=f"Analysebericht konnte nicht gespeichert werden: {exc}") from exc
+
+    result["report_file"] = str(report_path.relative_to(BASE_DIR))
+    return result
 
 

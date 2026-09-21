@@ -20,15 +20,14 @@
 <body>
   <!-- Die Seite zeigt das feste Interview und die Analyseergebnisse. -->
   <h1>Transcript Pattern Analyzer</h1>
-  <p class="muted">Wähle ein Transkript aus oder bearbeite den Text direkt vor der Analyse.</p>
+  <p class="muted">Das Standardtranskript wird geladen und kann vor der Analyse bearbeitet werden.</p>
 
   <!-- Bereich zum Anzeigen und Analysieren des geladenen Transcripts. -->
   <div class="row">
     <section>
       <h2>Interview-Transkript</h2>
-      <label for="transcriptFile">Vorhandenes Transkript</label>
-      <select id="transcriptFile"><option value="">Transkripte werden geladen...</option></select>
-      <textarea id="transcript" placeholder="Transkript hier einfügen oder aus der Auswahl laden..."></textarea>
+      <div id="transcriptStatus" class="muted">Interview.txt wird geladen...</div>
+      <textarea id="transcript" placeholder="Transkript hier einfügen oder bearbeiten..."></textarea>
       <h3>Analyse-Einstellungen</h3>
       <label for="model">Ollama-Modell</label>
       <select id="model"><option value="">Standardmodell laden...</option></select>
@@ -41,10 +40,19 @@
       <label for="timeout">Timeout in Sekunden</label>
       <input id="timeout" type="number" min="5" max="600" step="1" value="300" />
       <label for="chunkSize">Chunk-Größe in Zeichen</label>
-      <input id="chunkSize" type="number" min="500" max="20000" step="100" value="6000" />
-      <div class="muted">Maximale Ausgabetokens: <span id="outputTokens">512</span></div>
+      <input id="chunkSize" type="number" min="500" max="20000" step="100" value="2000" />
+      <label for="temperature">Temperatur</label>
+      <input id="temperature" type="number" min="0" max="2" step="0.1" value="0" />
+      <label for="topK">Top-K</label>
+      <input id="topK" type="number" min="1" max="100" step="1" value="1" />
+      <label for="topP">Top-P</label>
+      <input id="topP" type="number" min="0" max="1" step="0.05" value="1" />
+      <label for="seed">Seed</label>
+      <input id="seed" type="number" min="0" max="2147483647" step="1" value="42" />
+      <label for="outputTokens">Maximale Ausgabetokens</label>
+      <input id="outputTokens" type="number" min="128" max="2048" step="64" value="512" />
       <br />
-      <button onclick="analyzeInterview()">Interview analysieren</button>
+      <button id="analyzeButton" onclick="analyzeInterview()" disabled>Interview analysieren</button>
     </section>
   </div>
 
@@ -60,13 +68,6 @@
 // Zeigt Lade-, Erfolgs- oder Fehlermeldungen an.
 function setStatus(text) {
   document.getElementById('status').textContent = text;
-}
-
-// Hält die sichtbare Schätzung mit dem Backend-Limit synchron.
-function updateOutputTokens() {
-  const chunkSize = Number(document.getElementById('chunkSize').value) || 0;
-  const outputTokens = Math.max(128, Math.min(512, Math.floor(chunkSize / 2)));
-  document.getElementById('outputTokens').textContent = outputTokens;
 }
 
 function renderEvaluation(data) {
@@ -114,6 +115,13 @@ function renderEvaluation(data) {
   });
 
   container.appendChild(patternList);
+
+  if (data.report_file) {
+    const report = document.createElement('div');
+    report.className = 'muted';
+    report.textContent = `Gespeichert: ${data.report_file}`;
+    container.appendChild(report);
+  }
 }
 
 // Baut aus der API-Antwort die Trefferkarten für das Ergebnis.
@@ -146,38 +154,22 @@ function escapeHtml(value) {
   return div.innerHTML;
 }
 
-// Lädt ein ausgewähltes Transkript in die bearbeitbare Textarea.
-async function loadTranscript(filename) {
-  if (!filename) {
-    document.getElementById('transcript').value = '';
-    return;
-  }
-  const response = await fetch(`/transcripts/${encodeURIComponent(filename)}`);
+// Lädt ausschließlich data/interview.txt in die bearbeitbare Textarea.
+async function loadTranscript() {
+  const status = document.getElementById('transcriptStatus');
+  const analyzeButton = document.getElementById('analyzeButton');
+  status.textContent = 'Skript wird geladen...';
+  analyzeButton.disabled = true;
+  const response = await fetch('/transcript');
   const data = await response.json();
   if (!response.ok) {
     setStatus(data.detail || 'Transkript konnte nicht geladen werden.');
+    status.textContent = 'Skript konnte nicht geladen werden.';
     return;
   }
   document.getElementById('transcript').value = data.transcript;
-}
-
-// Lädt die verfügbaren Textdateien aus dem data-Ordner.
-async function loadTranscriptFiles() {
-  const response = await fetch('/transcripts');
-  const data = await response.json();
-  const select = document.getElementById('transcriptFile');
-  select.innerHTML = '';
-  if (!response.ok || !data.transcripts || data.transcripts.length === 0) {
-    select.innerHTML = '<option value="">Keine Transkripte verfügbar</option>';
-    return;
-  }
-  data.transcripts.forEach(filename => {
-    const option = document.createElement('option');
-    option.value = filename;
-    option.textContent = filename;
-    select.appendChild(option);
-  });
-  await loadTranscript(select.value);
+  status.textContent = 'interview.txt geladen.';
+  analyzeButton.disabled = false;
 }
 
 // Lädt ausschließlich lokal verfügbare Ollama-Modelle.
@@ -211,7 +203,12 @@ async function analyzeInterview() {
       model: document.getElementById('model').value || null,
       device: document.getElementById('device').value,
       timeout: Number(document.getElementById('timeout').value),
-      chunk_size: Number(document.getElementById('chunkSize').value)
+      chunk_size: Number(document.getElementById('chunkSize').value),
+      temperature: Number(document.getElementById('temperature').value),
+      top_k: Number(document.getElementById('topK').value),
+      top_p: Number(document.getElementById('topP').value),
+      seed: Number(document.getElementById('seed').value),
+      output_tokens: Number(document.getElementById('outputTokens').value)
     })
   });
 
@@ -236,12 +233,15 @@ async function analyzeInterview() {
   }
 }
 
-document.getElementById('chunkSize').addEventListener('input', updateOutputTokens);
-document.getElementById('transcriptFile').addEventListener('change', event => loadTranscript(event.target.value));
-updateOutputTokens();
-
-// Lädt Dateien und Modelle direkt beim Öffnen der Seite.
-Promise.all([loadTranscriptFiles(), loadModels()]).catch(() => setStatus('Einstellungen konnten nicht geladen werden.'));
+document.getElementById('transcript').addEventListener('input', event => {
+  const hasTranscript = Boolean(event.target.value.trim());
+  document.getElementById('analyzeButton').disabled = !hasTranscript;
+  if (hasTranscript) {
+    document.getElementById('transcriptStatus').textContent = 'Eigenes Skript bereit.';
+  }
+});
+// Lädt das Standardtranskript und die Modelle direkt beim Öffnen der Seite.
+Promise.all([loadTranscript(), loadModels()]).catch(() => setStatus('Einstellungen konnten nicht geladen werden.'));
 </script>
 </body>
 </html>

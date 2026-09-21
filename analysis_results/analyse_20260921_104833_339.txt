@@ -1,0 +1,79 @@
+TRANSCRIPT PATTERN ANALYZER - ANALYSEBERICHT
+====================================================
+Zeitpunkt: 2026-09-21T10:48:33.339594+02:00
+Modell: granite3.3:8b
+
+PARAMETER
+----------------------------------------------------
+model: granite3.3:8b
+device: auto
+timeout_seconds: 300.0
+chunk_size: 2000
+temperature: 0.0
+top_k: 1
+top_p: 1.0
+seed: 42
+output_tokens: 512
+
+LAUF-METADATEN
+----------------------------------------------------
+Dauer Sekunden: 1198.302
+Anzahl Chunks: 5
+Fehlgeschlagene Chunks: []
+Anzahl Treffer: 7
+
+TREFFER
+----------------------------------------------------
+[1] Muster: beschwerden_symptome
+Evidence: Sie haben ganz starke Schmerzen.
+Begründung: Die Patientin, Anne-Marie Meier, berichtet über starke Schmerzen.
+Confidence: 0.9000 (90.0 %)
+
+[2] Muster: zeitangabe_verlauf
+Evidence: Ich habe vor einer halben Stunde ein Ibuprofen genommen.
+Begründung: Die Patientin gibt an, vor einer halben Stunde ein Ibuprofen eingenommen zu haben.
+Confidence: 0.9000 (90.0 %)
+
+[3] Muster: frage_antwort_struktur
+Evidence: Wo sind denn die Schmerzen im Rücken? Oberer Rücken, unterer Rücken? Im unteren Bereich.
+Begründung: Diese Ausschnitte enthalten eine Frage ('Wo sind denn die Schmerzen im Rücken?') und die direkte Antwort ('Im unteren Bereich') von der Patientin.
+Confidence: 0.8000 (80.0 %)
+
+[4] Muster: medikamente_behandlung
+Evidence: Nein, sonst nehme ich keine Medikamente. Ah, wobei, ich nehme ab und zu mal leichte Beruhigungstabletten. Ich würde sie gar nicht als Medikamente einstufen, aber Lysara und Johanneskraut, das, was ich eben zu Hause habe.
+Begründung: Die Patientin gibt an, dass sie sonst keine Medikamente einnimmt, aber ab und zu leichte Beruhigungstabletten unter dem Namen Lysara und Johanneskraut nimmt.
+Confidence: 0.9000 (90.0 %)
+
+[5] Muster: beschwerden_symptome
+Evidence: Erdnussallergie. Erdnüsse, okay. Wie äußert sich das? Ganz schlimm. Ich bekomme wirklich so eine dicke Zunge und kaum Luft.
+Begründung: Die Patientin beschreibt eine Erdnussallergie mit Symptomen wie einer dicken Zunge und Atemnot.
+Confidence: 0.9000 (90.0 %)
+
+[6] Muster: frage_antwort_struktur
+Evidence: Frau Meier, rauchen Sie? Ich bin so ein Gelegenheitsraucher, so eine Partyraucherin. Okay. Wie viel rauchen Sie dann so, wenn Sie es abschätzen würden? Sind das dann so in der Woche zehn Zigaretten oder weniger? Ich würde eher fünf sagen, mal am Wochenende.
+Begründung: Die Frage 'Frau Meier, rauchen Sie?' wird direkt durch die Antwort 'Ich bin so ein Gelegenheitsraucher, so eine Partyraucherin.' beantwortet.
+Confidence: 0.8000 (80.0 %)
+
+[7] Muster: zeitangabe_verlauf
+Evidence: Einmal hat mir eine Freundin einen Nachtisch gebracht zum Geburtstag und sie wusste es nicht. Ich will nicht erzählen, was da los war. Da musste ich auch ganz schnell in die Notaufnahme, weil ich das zwar direkt gemerkt habe, aber trotzdem war es schon zu spät.
+Begründung: Die Patientin beschreibt ein Ereignis, bei dem sie aufgrund einer Erdnussallergie in die Notaufnahle eingeliefert wurde, was einen Zeitpunkt und eine Veränderung im Verlauf andeutet.
+Confidence: 0.7000 (70.0 %)
+
+EVALUATION
+----------------------------------------------------
+Ground Truth geladen: True
+Ground-Truth-Treffer: 63
+Vorhergesagte Treffer: 7
+Precision: 0.7143
+Recall: 0.0794
+F1: 0.1429
+TP: 5 | FP: 2 | FN: 58
+
+METRIKEN NACH MUSTER
+----------------------------------------------------
+beschwerden_symptome: Precision=0.5, Recall=0.1, F1=0.1667, TP=1, FP=1, FN=9
+frage_antwort_struktur: Precision=1.0, Recall=0.0909, F1=0.1667, TP=2, FP=0, FN=20
+medikamente_behandlung: Precision=1.0, Recall=0.1667, F1=0.2857, TP=1, FP=0, FN=5
+verneinung_ausschluss: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=8
+vorgeschichte_risikofaktoren: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=10
+zeitangabe_verlauf: Precision=0.5, Recall=0.1429, F1=0.2222, TP=1, FP=1, FN=6

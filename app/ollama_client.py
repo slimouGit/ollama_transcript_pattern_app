@@ -28,14 +28,19 @@ def chat_json(
     timeout: float | None = None,
     max_output_tokens: int = OLLAMA_MAX_OUTPUT_TOKENS,
     device: str = "auto",
+    temperature: float = 0.0,
+    top_k: int = 1,
+    top_p: float = 1.0,
+    seed: int = OLLAMA_SEED,
 ) -> Dict[str, Any]:
     # Sendet den Analyseprompt an Ollama und erwartet eine JSON-Antwort.
+    retry_output_tokens = max_output_tokens
     options: dict[str, Any] = {
-        "temperature": 0,
-        "seed": OLLAMA_SEED,
-        "top_k": 1,
-        "top_p": 1,
-        "num_predict": max_output_tokens,
+        "temperature": temperature,
+        "seed": seed,
+        "top_k": top_k,
+        "top_p": top_p,
+        "num_predict": retry_output_tokens,
     }
     if device == "cpu":
         options["num_gpu"] = 0
@@ -87,6 +92,9 @@ def chat_json(
             last_error = exc
 
         if attempt < OLLAMA_RETRIES - 1:
+            if last_error and "JSON" in str(last_error):
+                retry_output_tokens = min(2048, max(1024, retry_output_tokens * 4))
+                options["num_predict"] = retry_output_tokens
             time.sleep(0.5 * (attempt + 1))
 
     raise last_error or OllamaError("Ollama-Aufruf fehlgeschlagen.")
@@ -105,6 +113,9 @@ def _parse_json_content(content: str) -> Dict[str, Any]:
     try:
         result = json.loads(cleaned)
     except json.JSONDecodeError:
+        repaired = _repair_truncated_matches(cleaned)
+        if repaired is not None:
+            return repaired
         decoder = json.JSONDecoder()
         for position, character in enumerate(cleaned):
             if character != "{":
@@ -120,6 +131,34 @@ def _parse_json_content(content: str) -> Dict[str, Any]:
     if not isinstance(result, dict):
         raise TypeError("Die Ollama-Antwort ist kein JSON-Objekt.")
     return result
+
+
+def _repair_truncated_matches(content: str) -> Dict[str, Any] | None:
+    """Übernimmt vollständige Treffer aus einer am Ende abgeschnittenen JSON-Antwort."""
+    matches_start = content.find('"matches"')
+    array_start = content.find("[", matches_start)
+    if matches_start < 0 or array_start < 0:
+        return None
+
+    complete_items = []
+    decoder = json.JSONDecoder()
+    position = array_start + 1
+    while position < len(content):
+        while position < len(content) and content[position] in " \t\r\n,":
+            position += 1
+        if position >= len(content) or content[position] == "]":
+            break
+        try:
+            item, end = decoder.raw_decode(content, position)
+        except json.JSONDecodeError:
+            break
+        if isinstance(item, dict):
+            complete_items.append(item)
+        position = end
+
+    if not complete_items:
+        return None
+    return {"matches": complete_items}
 
 
 def health() -> Dict[str, Any]:

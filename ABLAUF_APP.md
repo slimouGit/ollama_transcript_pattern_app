@@ -55,7 +55,7 @@ Beim Klick auf "Interview analysieren" führt `analyzeInterview()` aus [template
 
 Die Werte sind Beispiele für einen robusten Analyse-Lauf. Die Standardwerte in
 [app/config.py](app/config.py) sind ein Timeout von 120 Sekunden und eine Chunk-Größe von
-3000 Zeichen. Bei langsamen lokalen Modellen können ein höheres Timeout und kleinere Chunks
+2000 Zeichen. Bei langsamen lokalen Modellen können ein höheres Timeout und kleinere Chunks
 verwendet werden.
 
 ## 5. Backend validiert die Optionen

@@ -76,7 +76,12 @@ verneint oder ausgeschlossen wird.
 Markiere niemals soziale oder private Verneinungen wie "nicht verheiratet", "kein Freund"
 oder "Single" als medizinische Verneinung.
 Markiere frage_antwort_struktur bei einer klar erkennbaren Frage-Antwort-Struktur. Die Frage
-und die zugehörige Antwort müssen im bereitgestellten Text vorkommen; ein Fragezeichen ist
-nicht zwingend, wenn die Frageform sprachlich eindeutig ist.
+und die zugehörige Antwort müssen beide in evidence enthalten sein. Verwende für dieses
+Muster nur zusammenhängende Ausschnitte mit dem vollständigen Fragesatz und der direkt
+folgenden Antwort. Ein einzelner Antwortsatz ohne die zugehörige Frage ist kein Treffer.
+Bei diesem Muster muss evidence ein Fragezeichen enthalten.
+Bei beschwerden_symptome muss evidence eine konkrete Beschwerde oder ein Symptom nennen,
+zum Beispiel Schmerzen, Atemnot, Übelkeit oder eine Ausstrahlung. Ein Auslöser oder eine
+Tätigkeit allein, etwa das Tragen einer Kiste, ist kein Symptomtreffer.
 Halte explanation kurz und begründe die konkrete Zuordnung.
 """

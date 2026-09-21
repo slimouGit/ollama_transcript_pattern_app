@@ -22,7 +22,7 @@ OLLAMA_RETRIES = max(1, min(2, int(os.getenv("OLLAMA_RETRIES", "2"))))
 OLLAMA_SEED = int(os.getenv("OLLAMA_SEED", "42"))
 MIN_OUTPUT_TOKENS = 128
 
-CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "6000"))
+CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "2000"))
 CHUNK_OVERLAP_SENTENCES = int(os.getenv("CHUNK_OVERLAP_SENTENCES", "0"))
 ABBREVIATION_PATTERN = re.compile(
     r"\b(?:Dr|Prof|Herr|Frau|z\.\s*B|d\.\s*h|bzw|usw|etc|vgl)\.",

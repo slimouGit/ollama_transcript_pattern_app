@@ -73,6 +73,11 @@ def analyze_chunk(
     model: str | None = None,
     timeout: float | None = None,
     device: str = "auto",
+    temperature: float = 0.0,
+    top_k: int = 1,
+    top_p: float = 1.0,
+    seed: int = 42,
+    output_tokens: int | None = None,
 ) -> list[Match]:
     user_prompt = build_user_prompt(chunk)
 
@@ -81,8 +86,12 @@ def analyze_chunk(
         user_prompt,
         model=model,
         timeout=timeout,
-        max_output_tokens=output_tokens_for_chunk(len(chunk)),
+        max_output_tokens=output_tokens or output_tokens_for_chunk(len(chunk)),
         device=device,
+        temperature=temperature,
+        top_k=top_k,
+        top_p=top_p,
+        seed=seed,
     )
 
     matches = []
@@ -122,6 +131,17 @@ def filter_matches(
         r"medikament|tablett|ibuprofen|paracetamol|therapie|behandlung|genommen|nehme|einnahme|dosier",
         re.IGNORECASE,
     )
+    symptom = re.compile(
+        r"schmerz|weh|beschwer|symptom|atemnot|luft|fieber|übel|erbrechen|"
+        r"schwindel|taub|lähm|juck|\bblut\b|husten|ausstrahl",
+        re.IGNORECASE,
+    )
+    question = re.compile(
+        r"(?:^|[.!?]\s+)(?:wie|wo|was|wer|wann|warum|welche[rsmn]?|"
+        r"sind|haben|können|kann|nehmen|rauchen|trinken|gibt|"
+        r"wurde|wurden)\b[^.!?]*\?",
+        re.IGNORECASE,
+    )
 
     filtered = []
     for match in matches:
@@ -131,6 +151,10 @@ def filter_matches(
         if not evidence or len(evidence) > 320:
             continue
         if source_text and not _evidence_in_source(evidence, source_text):
+            continue
+        if match.pattern == "beschwerden_symptome" and not symptom.search(evidence):
+            continue
+        if match.pattern == "frage_antwort_struktur" and not question.search(evidence):
             continue
         if match.pattern == "medikamente_behandlung" and not treatment.search(
             evidence
@@ -182,6 +206,11 @@ def analyze_transcript(
     timeout: float | None = None,
     chunk_size: int | None = None,
     device: str = "auto",
+    temperature: float = 0.0,
+    top_k: int = 1,
+    top_p: float = 1.0,
+    seed: int = 42,
+    output_tokens: int | None = None,
 ) -> AnalysisResponse:
     chunks = chunk_text(transcript, max_chars=chunk_size or CHUNK_SIZE)
     started_at = time.perf_counter()
@@ -193,16 +222,65 @@ def analyze_transcript(
         chunk_started_at = time.perf_counter()
         try:
             all_matches.extend(
-                analyze_chunk(chunk, model=model, timeout=timeout, device=device)
+                analyze_chunk(
+                    chunk,
+                    model=model,
+                    timeout=timeout,
+                    device=device,
+                    temperature=temperature,
+                    top_k=top_k,
+                    top_p=top_p,
+                    seed=seed,
+                    output_tokens=output_tokens,
+                )
             )
         except OllamaError as exc:
-            failed_chunks.append(chunk_index)
-            logger.warning(
-                "Chunk %d/%d fehlgeschlagen und wird übersprungen: %s",
-                chunk_index,
-                len(chunks),
-                exc,
+            fallback_chunks = (
+                chunk_text(chunk, max_chars=max(1000, len(chunk) // 2))
+                if "JSON" in str(exc) and len(chunk) > 2000
+                else []
             )
+            fallback_matches = []
+            for fallback_index, fallback_chunk in enumerate(fallback_chunks, start=1):
+                try:
+                    fallback_matches.extend(
+                        analyze_chunk(
+                            fallback_chunk,
+                            model=model,
+                            timeout=timeout,
+                            device=device,
+                            temperature=temperature,
+                            top_k=top_k,
+                            top_p=top_p,
+                            seed=seed,
+                            output_tokens=output_tokens,
+                        )
+                    )
+                except OllamaError as fallback_exc:
+                    logger.warning(
+                        "Fallback für Chunk %d/%d, Teil %d fehlgeschlagen: %s",
+                        chunk_index,
+                        len(chunks),
+                        fallback_index,
+                        fallback_exc,
+                    )
+
+            if fallback_matches:
+                logger.warning(
+                    "Chunk %d/%d wegen abgeschnittenem JSON in %d kleinere Teile geteilt",
+                    chunk_index,
+                    len(chunks),
+                    len(fallback_chunks),
+                )
+                all_matches.extend(fallback_matches)
+            else:
+                failed_chunks.append(chunk_index)
+                logger.warning(
+                    "Chunk %d/%d fehlgeschlagen und wird übersprungen: %s",
+                    chunk_index,
+                    len(chunks),
+                    exc,
+                )
         finally:
             logger.info(
                 "Chunk %d/%d verarbeitet in %.2f Sekunden",
@@ -229,4 +307,14 @@ def analyze_transcript(
         duration_seconds=duration_seconds,
         chunk_count=len(chunks),
         failed_chunks=failed_chunks,
+        parameters={
+            "device": device,
+            "timeout": timeout,
+            "chunk_size": chunk_size or CHUNK_SIZE,
+            "temperature": temperature,
+            "top_k": top_k,
+            "top_p": top_p,
+            "seed": seed,
+            "output_tokens": output_tokens,
+        },
     )
