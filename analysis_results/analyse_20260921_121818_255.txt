@@ -1,0 +1,76 @@
+TRANSCRIPT PATTERN ANALYZER - ANALYSEBERICHT
+====================================================
+Zeitpunkt: 2026-09-21T12:18:18.255509+02:00
+Modell: qwen2.5:3b
+
+PARAMETER
+----------------------------------------------------
+model: qwen2.5:3b
+device: auto
+timeout_seconds: 300.0
+chunk_size: 2000
+temperature: 0.0
+top_k: 1
+top_p: 1.0
+seed: 42
+output_tokens: 512
+
+LAUF-METADATEN
+----------------------------------------------------
+Dauer Sekunden: 389.577
+Anzahl Chunks: 5
+Fehlgeschlagene Chunks: []
+Anzahl Treffer: 4
+
+DEVICE-INFORMATIONEN
+----------------------------------------------------
+Angefordert: auto
+Tatsächlich genutzt: cpu
+CPU: AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD
+GPU erkannt: True
+GPU: AMD Radeon Graphics
+GPU VRAM GB: None
+RAM GB: 30.66
+Ollama-Modell: qwen2.5:3b
+Runtime-Details: {'api_available': True, 'actual_runtime_device': 'cpu', 'model': 'qwen2.5:3b', 'size_vram_bytes': 0, 'reason': 'Ollama /api/ps size_vram ausgewertet.'}
+
+TREFFER
+----------------------------------------------------
+[1] Muster: frage_antwort_struktur
+Evidence: Sind Sie damit einverstanden? Ja, sehr gerne.
+Begründung: Die Frage 'Sind Sie damit einverstanden?' und die Antwort 'Ja, sehr gerne.' bilden eine klare Frage-Antwort-Struktur.
+Confidence: 0.9500 (95.0 %)
+
+[2] Muster: frage_antwort_struktur
+Evidence: Wie stark sind Ihre Schmerzen? Wenn ich mich bewege, 9, 10. Okay. Wenn Sie sich denn noch bewegen? Es geht kaum, wirklich. Okay. Strahlen die Schmerzen in einer anderen Körperregion aus? Ja, die strahlen Richtung Beine aus, in beiden Beinen. In beiden Beinen, okay.
+Begründung: Die Frage und die Antwort sind explizit und inhaltlich zusammenhängend.
+Confidence: 0.9500 (95.0 %)
+
+[3] Muster: frage_antwort_struktur
+Evidence: Haben Sie Vorerkrankungen, von denen ich wissen sollte? Nein, keine Vorerkrankungen.
+Begründung: Die Frage und die Antwort sind explizit und inhaltlich zusammenhängend.
+Confidence: 0.9500 (95.0 %)
+
+[4] Muster: frage_antwort_struktur
+Evidence: Frau Meier, eine Routinefrage, die ich Ihnen stellen muss. Nehmen Sie sonstige Drogen ein? Brauchen Sie ab und zu mal Marihuana oder nehmen Sie etwas Aufpunschendes?
+Begründung: Die Frage und die Antwort sind explizit und inhaltlich zusammenhängend.
+Confidence: nicht verfügbar
+
+EVALUATION
+----------------------------------------------------
+Ground Truth geladen: True
+Ground-Truth-Treffer: 63
+Vorhergesagte Treffer: 4
+Precision: 0.75
+Recall: 0.0476
+F1: 0.0896
+TP: 3 | FP: 1 | FN: 60
+
+METRIKEN NACH MUSTER
+----------------------------------------------------
+beschwerden_symptome: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=10
+frage_antwort_struktur: Precision=0.75, Recall=0.1364, F1=0.2308, TP=3, FP=1, FN=19
+medikamente_behandlung: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=6
+verneinung_ausschluss: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=8
+vorgeschichte_risikofaktoren: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=10
+zeitangabe_verlauf: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=7

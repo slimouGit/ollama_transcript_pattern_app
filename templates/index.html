@@ -150,6 +150,11 @@
     .card strong { color: var(--teal-dark); }
     #results, #evaluation { display: grid; gap: 10px; }
     #status { min-height: 22px; font-size: 0.9rem; }
+    .loading-card { display: flex; align-items: center; gap: 14px; color: var(--teal-dark); background: var(--surface-low); }
+    .spinner { width: 22px; height: 22px; border: 3px solid #b8d5d1; border-top-color: var(--teal); border-radius: 50%; animation: spin 0.85s linear infinite; }
+    .loading-copy { display: grid; gap: 3px; }
+    .loading-copy strong { color: var(--ink); }
+    @keyframes spin { to { transform: rotate(360deg); } }
     pre { white-space: pre-wrap; word-break: break-word; }
     @media (max-width: 720px) {
       .app-shell { width: 94vw; padding-top: 18px; }
@@ -377,47 +382,91 @@ async function loadDeviceInfo() {
   }
 }
 
+let analysisTimer = null;
+let analysisStartedAt = 0;
+
+function setAnalysisBusy(isBusy) {
+  document.querySelectorAll('#transcript, #model, #device, #timeout, #chunkSize, #temperature, #topK, #topP, #seed, #outputTokens')
+    .forEach(element => { element.disabled = isBusy; });
+  document.getElementById('analyzeButton').disabled = isBusy || !document.getElementById('transcript').value.trim();
+}
+
+function formatElapsedTime() {
+  const elapsed = Math.floor((Date.now() - analysisStartedAt) / 1000);
+  const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
+  const seconds = String(elapsed % 60).padStart(2, '0');
+  return `${minutes}:${seconds}`;
+}
+
+function showLoadingState(message) {
+  document.getElementById('results').innerHTML = `
+    <div class="card loading-card" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <div class="loading-copy"><strong>${escapeHtml(message)}</strong><span class="muted">Laufzeit: <span id="elapsedTime">00:00</span></span></div>
+    </div>
+  `;
+}
+
+function startAnalysisProgress() {
+  analysisStartedAt = Date.now();
+  setAnalysisBusy(true);
+  showLoadingState('Analyse wird vorbereitet ...');
+  analysisTimer = window.setInterval(() => {
+    const elapsed = document.getElementById('elapsedTime');
+    if (elapsed) elapsed.textContent = formatElapsedTime();
+  }, 1000);
+}
+
+function stopAnalysisProgress() {
+  if (analysisTimer !== null) {
+    window.clearInterval(analysisTimer);
+    analysisTimer = null;
+  }
+  setAnalysisBusy(false);
+}
+
 // Startet die Musteranalyse des vorhandenen Interviews.
 async function analyzeInterview() {
-  setStatus('Analysiere Interview...');
-  document.getElementById('results').innerHTML = '';
+  startAnalysisProgress();
+  setStatus('Analysiere Interview ...');
   document.getElementById('evaluation').innerHTML = '<div class="card">Evaluation wird nach der Analyse gestartet.</div>';
-  const response = await fetch('/analyze-interview', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      transcript: document.getElementById('transcript').value,
-      model: document.getElementById('model').value || null,
-      device: document.getElementById('device').value,
-      timeout: Number(document.getElementById('timeout').value),
-      chunk_size: Number(document.getElementById('chunkSize').value),
-      temperature: Number(document.getElementById('temperature').value),
-      top_k: Number(document.getElementById('topK').value),
-      top_p: Number(document.getElementById('topP').value),
-      seed: Number(document.getElementById('seed').value),
-      output_tokens: Number(document.getElementById('outputTokens').value)
-    })
-  });
+  try {
+    const response = await fetch('/analyze-interview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        transcript: document.getElementById('transcript').value,
+        model: document.getElementById('model').value || null,
+        device: document.getElementById('device').value,
+        timeout: Number(document.getElementById('timeout').value),
+        chunk_size: Number(document.getElementById('chunkSize').value),
+        temperature: Number(document.getElementById('temperature').value),
+        top_k: Number(document.getElementById('topK').value),
+        top_p: Number(document.getElementById('topP').value),
+        seed: Number(document.getElementById('seed').value),
+        output_tokens: Number(document.getElementById('outputTokens').value)
+      })
+    });
 
-  const data = await response.json();
-  if (!response.ok) {
-    setStatus(data.detail || 'Fehler');
-    renderEvaluation(null);
-    return;
-  }
-  setStatus(`Fertig. Modell: ${data.model}`);
-  renderDeviceInfo(data.device_info);
-  render(data);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Analyse fehlgeschlagen.');
+    setStatus(`Analyse fertig. Modell: ${data.model}`);
+    renderDeviceInfo(data.device_info);
+    render(data);
 
-  setStatus('Analyse fertig. Werte werden evaluiert...');
-  const evaluationResponse = await fetch('/evaluate');
-  const evaluationData = await evaluationResponse.json();
-  if (evaluationResponse.ok) {
+    setStatus('Evaluation wird berechnet ...');
+    showLoadingState('Evaluation wird berechnet ...');
+    const evaluationResponse = await fetch('/evaluate');
+    const evaluationData = await evaluationResponse.json();
+    if (!evaluationResponse.ok) throw new Error(evaluationData.detail || 'Evaluation konnte nicht ausgeführt werden.');
     renderEvaluation(evaluationData);
     setStatus(`Analyse und Evaluation fertig. Modell: ${data.model}`);
-  } else {
+  } catch (error) {
+    setStatus(error.message || 'Analyse fehlgeschlagen.');
     renderEvaluation(null);
-    setStatus(evaluationData.detail || 'Evaluation konnte nicht ausgeführt werden.');
+    document.getElementById('results').innerHTML = '<div class="card">Die Anfrage konnte nicht abgeschlossen werden.</div>';
+  } finally {
+    stopAnalysisProgress();
   }
 }
 
