@@ -103,11 +103,29 @@ zu bestimmen. Wenn Ollama den Lauf nicht mehr zuverlässig meldet, steht dort `u
 Im Frontend können neben Modell, Verarbeitung, Timeout und Chunk-Größe auch
 `temperature`, `top_k`, `top_p`, `seed` und die maximalen Ausgabetokens eingestellt werden.
 Nach einer abgeschlossenen Evaluation wird automatisch ein vollständiger Textbericht mit
-Zeitstempel unter `analysis_results/` gespeichert. Der Bericht enthält Transkript, Treffer,
+Zeitstempel unter `analysis_results/` gespeichert. Der Bericht enthält Treffer,
 Begründungen, Confidence-Werte, Evaluationsmetriken, Modell, alle Analyseparameter,
 Chunk-Informationen und die Dauer des Laufs.
 Zusätzlich werden die Hardwareinformationen, der angeforderte Modus und der erkannte
 Ollama-Laufmodus im Bericht unter `DEVICE-INFORMATIONEN` gespeichert.
+
+Während einer Analyse zeigt die Oberfläche einen Spinner, die bisherige Laufzeit und
+Statusphasen für Analyse, Evaluation und Speicherung. Eingabefelder werden während des
+Laufs gesperrt und bei Fehlern wieder freigegeben.
+
+## Screenshots
+
+### Desktop
+
+![Desktop-Oberfläche](docs/screenshots/app-desktop.png)
+
+### Mobile
+
+![Mobile-Oberfläche](docs/screenshots/app-mobile.png)
+
+Die Oberfläche verwendet ein Material-inspiriertes Layout mit breiter Transkriptfläche,
+zweispaltigen Analyseparametern, responsiver Darstellung und Tooltips für technische
+Ollama-Einstellungen.
 
 ## Wichtige Dateien
 

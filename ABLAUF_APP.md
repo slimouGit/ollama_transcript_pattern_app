@@ -9,6 +9,7 @@ Dieses Dokument beschreibt den aktuellen Ablauf der App. Analyse und Evaluation 
 3. Das Frontend startet parallel:
    - `GET /transcript`
    - `GET /models`
+   - `GET /device-info`
 
 ## 2. Transkript und Modelle laden
 
@@ -16,7 +17,8 @@ Dieses Dokument beschreibt den aktuellen Ablauf der App. Analyse und Evaluation 
 
 1. `GET /transcript` ruft in [app/main.py](app/main.py) `read_transcript()` auf.
 2. `data/interview.txt` wird gelesen.
-3. Das Frontend setzt den Inhalt in das readonly-Feld `#transcript`.
+3. Das Frontend setzt den Inhalt in das bearbeitbare Feld `#transcript`.
+4. Unterhalb des Textfelds wird die aktuelle Zeichenanzahl angezeigt.
 
 ### Modelle
 
@@ -33,6 +35,11 @@ Vor dem Start kann der Nutzer festlegen:
 - Verarbeitungsmodus: automatisch, GPU bevorzugen oder nur CPU
 - Timeout in Sekunden
 - Chunk-Größe in Zeichen
+- Temperatur
+- Top-K
+- Top-P
+- Seed
+- maximale Ausgabetokens
 
 Die Werte gelten nur für den nächsten Analyseaufruf. Das Frontend führt keine Shell-Befehle aus.
 
@@ -49,7 +56,12 @@ Beim Klick auf "Interview analysieren" führt `analyzeInterview()` aus [template
   "model": "qwen2.5:7b",
    "device": "auto",
    "timeout": 300,
-   "chunk_size": 2000
+      "chunk_size": 2000,
+      "temperature": 0,
+      "top_k": 1,
+      "top_p": 1,
+      "seed": 42,
+      "output_tokens": 512
 }
 ```
 
@@ -67,10 +79,18 @@ In [app/main.py](app/main.py) wird `AnalysisRequest` aus [app/schemas.py](app/sc
 - `chunk_size` liegt zwischen 500 und 20.000 Zeichen.
 
 Nicht gesetzte Werte verwenden die Standardkonfiguration aus [app/config.py](app/config.py).
-Im Modus `auto` entscheidet Ollama selbst über GPU- und CPU-Nutzung. `gpu` setzt die
-GPU-Nutzung für die Modelllayer voraus, während `cpu` die GPU-Nutzung deaktiviert.
+Im Modus `auto` entscheidet Ollama selbst über GPU- und CPU-Nutzung. `gpu` bevorzugt
+GPU-Modelllayer, während `cpu` die GPU-Nutzung deaktiviert. Der angeforderte Modus wird
+getrennt vom erkannten Laufzeitmodus gespeichert.
 
-## 6. Transkript in Chunks aufteilen
+## 6. Hardware- und Device-Informationen
+
+`GET /device-info` ermittelt CPU-Name, GPU-Name, GPU-Erkennung, VRAM, RAM und das
+ausgewählte Modell. Nach einer Analyse wird zusätzlich Ollamas `GET /api/ps` geprüft.
+Wenn dort keine zuverlässige Zuordnung möglich ist, wird der tatsächliche Laufzeitmodus
+als `unknown` angezeigt. Das Frontend zeigt angefordert und tatsächlich genutzt getrennt.
+
+## 7. Transkript in Chunks aufteilen
 
 1. `read_transcript()` liest das Interview erneut.
 2. `analyze_transcript()` in [app/analyzer.py](app/analyzer.py) ruft `chunk_text()` auf.
@@ -81,7 +101,7 @@ Eine größere Chunk-Größe reduziert die Anzahl der Ollama-Aufrufe, kann aber 
 Die Chunks werden nacheinander vollständig verarbeitet. Standardmäßig gibt es keinen Satz-Overlap
 zwischen aufeinanderfolgenden Chunks.
 
-## 7. Jeden Chunk mit Ollama analysieren
+## 8. Jeden Chunk mit Ollama analysieren
 
 Für jeden Chunk läuft `analyze_chunk()`:
 
@@ -93,7 +113,7 @@ Für jeden Chunk läuft `analyze_chunk()`:
    - gewähltes Modell
    - gewähltes Timeout
    - JSON-Ausgabeformat
-   - maximal 2048 Ausgabetokens (`OLLAMA_MAX_OUTPUT_TOKENS`)
+   - die im Frontend gesetzten Sampling-Parameter
 4. Erwartete Trefferfelder sind:
    - `pattern`
    - `evidence`
@@ -113,7 +133,7 @@ Ollama. Die App prüft danach nur technisch und teilweise regelbasiert, ob:
 Die gültigen Treffer aus allen Chunks werden gesammelt, anschließend teilweise dedupliziert
 und in `latest_analysis` gespeichert.
 
-## 8. Modellantwort filtern
+## 9. Modellantwort filtern
 
 Die Antwort wird in `Match`-Objekte validiert. Danach werden nur Treffer akzeptiert, die:
 
@@ -130,9 +150,7 @@ stehen in [app/patterns.py](app/patterns.py). Der Prompt fordert eine systematis
 Muster und erlaubt mehrere Treffer pro Muster sowie die Zuordnung einer Textstelle zu mehreren
 Mustern.
 
-Das Frage-Antwort-Muster ist aktuell deaktiviert, weil es für die vorhandene Ground Truth zu viele Fehlklassifikationen erzeugt.
-
-## 9. Treffer zusammenführen
+## 10. Treffer zusammenführen
 
 1. Treffer aus allen Chunks werden gesammelt.
 2. `remove_duplicate_matches()` normalisiert die Evidence-Texte.
@@ -140,17 +158,19 @@ Das Frage-Antwort-Muster ist aktuell deaktiviert, weil es für die vorhandene Gr
    Treffer zusammenfallen; die aktuelle Deduplizierung berücksichtigt dabei nicht den Pattern-Namen.
 4. Das Ergebnis wird als `AnalysisResponse` zurückgegeben.
 
-## 10. Analyse speichern und anzeigen
+## 11. Analyse speichern und anzeigen
 
 1. Das Backend speichert das Ergebnis in `latest_analysis`.
 2. Die Antwort enthält:
    - Transkript
    - Trefferliste
    - verwendetes Modell
-3. Das Frontend rendert jeden Treffer mit Muster, Evidence, Erklärung und Confidence.
+3. Während der Anfrage zeigt das Frontend Spinner, Laufzeit und Statusphase.
+4. Während Analyse und Evaluation werden Eingabefelder und Startbutton deaktiviert.
+5. Nach Abschluss rendert das Frontend jeden Treffer mit Muster, Evidence, Erklärung und Confidence.
 4. Fehlt die Confidence in der Modellantwort, wird "nicht verfügbar" angezeigt. Es wird kein künstlicher Wert wie 50 Prozent erzeugt.
 
-## 11. Evaluation nach abgeschlossener Analyse
+## 12. Evaluation nach abgeschlossener Analyse
 
 Erst wenn die Analyse erfolgreich war, ruft das Frontend `GET /evaluate` auf.
 
@@ -166,21 +186,25 @@ Erst wenn die Analyse erfolgreich war, ruft das Frontend `GET /evaluate` auf.
    - Recall
    - F1
 6. Während der Evaluation wird kein Ollama-Aufruf gestartet.
+7. Der vollständige Bericht wird in `analysis_results/` als UTF-8-Textdatei mit Zeitstempel gespeichert.
+   Er enthält Modell, Parameter, Dauer, Chunk-Metadaten, Device-Informationen, Treffer und Metriken.
 
-## 12. Fehlerfälle
+## 13. Fehlerfälle
 
 - Leeres oder fehlendes Transkript: HTTP-Fehler beim Lesen.
 - Nicht erreichbares Ollama oder Timeout: HTTP `503`; es werden keine Fallback-Treffer erzeugt.
 - Ungültige Einstellungen: Validierungsfehler durch `AnalysisRequest`.
 - Evaluation vor Analyse: HTTP `409`.
+- Nicht zuverlässig ermittelbarer Ollama-Laufzeitmodus: Anzeige und Bericht verwenden `unknown`.
 
 ## Kurz gesagt
 
 ```text
 Seite laden
--> /transcript und /models
--> Nutzer wählt Modell, Timeout und Chunk-Größe
+-> /transcript, /models und /device-info
+-> Nutzer bearbeitet Transkript und wählt Modell, Device, Sampling und Chunk-Parameter
 -> POST /analyze-interview
+-> Spinner, Statusphase und Laufzeitzähler anzeigen
 -> Optionen validieren
 -> Transkript lesen und chunken
 -> jeden Chunk an Ollama senden
@@ -189,5 +213,6 @@ Seite laden
 -> Analyse speichern und anzeigen
 -> GET /evaluate
 -> gespeicherte Treffer mit Ground Truth vergleichen
--> Metriken anzeigen
+-> Metriken und Bericht speichern
+-> Ergebnisse, Evaluation und Device-Informationen anzeigen
 ```
