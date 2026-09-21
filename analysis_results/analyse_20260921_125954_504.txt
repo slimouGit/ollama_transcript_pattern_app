@@ -1,0 +1,101 @@
+TRANSCRIPT PATTERN ANALYZER - ANALYSEBERICHT
+====================================================
+Zeitpunkt: 2026-09-21T12:59:54.504494+02:00
+Modell: qwen2.5:7b
+
+PARAMETER
+----------------------------------------------------
+model: qwen2.5:7b
+device: auto
+timeout_seconds: 300.0
+chunk_size: 2000
+temperature: 0.0
+top_k: 1
+top_p: 1.0
+seed: 42
+output_tokens: 512
+
+LAUF-METADATEN
+----------------------------------------------------
+Dauer Sekunden: 675.781
+Anzahl Chunks: 5
+Fehlgeschlagene Chunks: []
+Anzahl Treffer: 9
+
+DEVICE-INFORMATIONEN
+----------------------------------------------------
+Angefordert: auto
+Tatsächlich genutzt: cpu
+CPU: AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD
+GPU erkannt: True
+GPU: AMD Radeon Graphics
+GPU VRAM GB: None
+RAM GB: 30.66
+Ollama-Modell: qwen2.5:7b
+Runtime-Details: {'api_available': True, 'actual_runtime_device': 'cpu', 'model': 'qwen2.5:7b', 'size_vram_bytes': 0, 'reason': 'Ollama /api/ps size_vram ausgewertet.'}
+
+TREFFER
+----------------------------------------------------
+[1] Muster: beschwerden_symptome
+Evidence: Ich habe vor einer halben Stunde ein Ibuprofen genommen. Deswegen versuche ich es erstmal, aber ich sage Ihnen Bescheid, wenn es zu sehr wehtut.
+Begründung: Die Patientin beschreibt starke Schmerzen und gibt an, dass sie vor einer halben Stunde Ibuprofen eingenommen hat, um diese Schmerzen zu lindern.
+Confidence: 1.0000 (100.0 %)
+
+[2] Muster: frage_antwort_struktur
+Evidence: Frau Meier, Sie sagen, Sie haben ganz starke Schmerzen. Was ist denn passiert? Ja, ich bin heute am Umziehen.
+Begründung: Hier ist eine klare Frage-Antwort-Struktur, wobei die Frage nach dem Grund für die Schmerzen gestellt und die Patientin antwortet, dass sie heute am Umziehen ist.
+Confidence: 1.0000 (100.0 %)
+
+[3] Muster: beschwerden_symptome
+Evidence: und irgendwie habe ich plötzlich so starke Schmerzen in dem Rücken bekommen, dass es gar nicht mehr ging. Und ja, die habe ich immer noch.
+Begründung: Die Patientin beschreibt starke Schmerzen in dem Rücken, die sie immer noch hat.
+Confidence: 1.0000 (100.0 %)
+
+[4] Muster: beschwerden_symptome
+Evidence: Strahlen die Schmerzen in einer anderen Körperregion aus? Ja, die strahlen Richtung Beine aus, in beiden Beinen.
+Begründung: Die Patientin bestätigt, dass die Schmerzen in den Beinen ausstrahlen.
+Confidence: 1.0000 (100.0 %)
+
+[5] Muster: frage_antwort_struktur
+Evidence: Wo sind denn die Schmerzen im Rücken? Oberer Rücken, unterer Rücken? Im unteren Bereich. Okay.
+Begründung: Eine klare Frage mit der darauf folgenden Antwort der Patientin.
+Confidence: 1.0000 (100.0 %)
+
+[6] Muster: frage_antwort_struktur
+Evidence: Wie stark sind Ihre Schmerzen? Wenn ich mich bewege, 9, 10. Okay. Wenn Sie sich denn noch bewegen? Es geht kaum, wirklich. Okay.
+Begründung: Eine klare Frage mit der darauf folgenden Antwort der Patientin.
+Confidence: 1.0000 (100.0 %)
+
+[7] Muster: frage_antwort_struktur
+Evidence: Frau Meier, eine Routinefrage, die ich Ihnen stellen muss. Nehmen Sie sonstige Drogen ein? Brauchen Sie ab und zu mal Marihuana oder nehmen Sie etwas Aufpunschendes? Ja, jedes Wochenende koche ich.
+Begründung: Die Frage und die darauf folgende Antwort sind klar erkennbar und enthalten beide den Fragezeichen-Ausschnitt.
+Confidence: 1.0000 (100.0 %)
+
+[8] Muster: frage_antwort_struktur
+Evidence: Frau Meier, wie sieht es in Ihrer Familie aus? Gibt es da Vorerkrankungen, von denen ich wissen sollte? Einen Herzinfarkt oder Diabetes oder andere schwere Erkrankungen? Das nicht. Nur meine Großmutter hatte eine Hirnblutung. Okay.
+Begründung: Diese Passage enthält eine Frage, gefolgt von einer Antwort, die direkt darauf reagiert.
+Confidence: 1.0000 (100.0 %)
+
+[9] Muster: zeitangabe_verlauf
+Evidence: Frau Meier, sind Sie verheiratet? Nein, nicht verheiratet. Kein Freund. Single. Okay, super. Na, so super ist das nicht. Ich habe mich nicht auf Ihre Situation bezogen, sondern das ist so mein Persönliches. Habe ich notiert, wissen Sie.
+Begründung: Die Aussage 'so super ist das nicht' impliziert eine Vergleichszeit, in der das nicht so super war.
+Confidence: 0.8000 (80.0 %)
+
+EVALUATION
+----------------------------------------------------
+Ground Truth geladen: True
+Ground-Truth-Treffer: 63
+Vorhergesagte Treffer: 9
+Precision: 0.5556
+Recall: 0.0794
+F1: 0.1389
+TP: 5 | FP: 4 | FN: 58
+
+METRIKEN NACH MUSTER
+----------------------------------------------------
+beschwerden_symptome: Precision=0.6667, Recall=0.2, F1=0.3077, TP=2, FP=1, FN=8
+frage_antwort_struktur: Precision=0.6, Recall=0.1364, F1=0.2222, TP=3, FP=2, FN=19
+medikamente_behandlung: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=6
+verneinung_ausschluss: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=8
+vorgeschichte_risikofaktoren: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=10
+zeitangabe_verlauf: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=1, FN=7

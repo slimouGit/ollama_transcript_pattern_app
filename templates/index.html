@@ -459,6 +459,7 @@ async function analyzeInterview() {
     const evaluationResponse = await fetch('/evaluate');
     const evaluationData = await evaluationResponse.json();
     if (!evaluationResponse.ok) throw new Error(evaluationData.detail || 'Evaluation konnte nicht ausgeführt werden.');
+    render(data);
     renderEvaluation(evaluationData);
     setStatus(`Analyse und Evaluation fertig. Modell: ${data.model}`);
   } catch (error) {
