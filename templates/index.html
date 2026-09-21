@@ -5,69 +5,245 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Transcript Pattern Analyzer</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-    textarea { width: 100%; min-height: 220px; }
-    label { display: block; margin-top: 10px; font-weight: bold; }
-    select, input { width: 100%; box-sizing: border-box; padding: 8px; margin-top: 4px; }
-    button { padding: 10px 16px; margin-top: 10px; cursor: pointer; }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-    .card { border: 1px solid #ddd; border-radius: 8px; padding: 14px; margin: 10px 0; }
-    .muted { color: #666; }
+    :root {
+      --ink: #19323c;
+      --muted: #61747b;
+      --surface: #ffffff;
+      --surface-low: #f1f6f5;
+      --line: #d9e5e3;
+      --teal: #087f73;
+      --teal-dark: #075e57;
+      --amber: #d9822b;
+      --shadow: 0 10px 30px rgba(25, 50, 60, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: #eaf2f1;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+    }
+    .app-shell { width: 90vw; max-width: 1440px; margin: 0 auto; padding: 28px 0 56px; }
+    .app-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      color: #fff;
+      background: var(--teal);
+      font-size: 22px;
+      font-weight: 700;
+      box-shadow: 0 6px 14px rgba(8, 127, 115, 0.24);
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 4px; font-size: clamp(1.45rem, 2.2vw, 2rem); letter-spacing: 0; }
+    h2 { margin-bottom: 4px; font-size: 1.12rem; }
+    h3 { margin-bottom: 14px; font-size: 1rem; }
+    .subtitle, .muted { color: var(--muted); }
+    .subtitle { margin: 0; font-size: 0.94rem; }
+    .status-pill {
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--teal-dark);
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .workspace { display: grid; gap: 22px; }
+    .panel, .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .panel { padding: clamp(18px, 3vw, 30px); }
+    .panel-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
+    .transcript-panel textarea {
+      display: block;
+      width: 100%;
+      min-height: min(48vh, 520px);
+      resize: vertical;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fbfdfd;
+      font: 0.96rem/1.65 Georgia, serif;
+    }
+    textarea:focus, input:focus, select:focus { outline: 3px solid rgba(8, 127, 115, 0.17); border-color: var(--teal); }
+    .settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; }
+    .field { min-width: 0; }
+    label { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; color: var(--ink); font-size: 0.83rem; font-weight: 700; }
+    select, input {
+      width: 100%;
+      min-height: 42px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+    }
+    .help {
+      position: relative;
+      display: inline-grid;
+      place-items: center;
+      width: 17px;
+      height: 17px;
+      border: 1px solid #91aaa6;
+      border-radius: 50%;
+      color: var(--teal-dark);
+      font-size: 11px;
+      cursor: help;
+    }
+    .help::after {
+      position: absolute;
+      z-index: 5;
+      left: 24px;
+      bottom: 22px;
+      width: 230px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: #fff;
+      background: #19323c;
+      box-shadow: 0 8px 20px rgba(25, 50, 60, 0.2);
+      content: attr(data-tooltip);
+      font-size: 0.76rem;
+      font-weight: 400;
+      line-height: 1.4;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(4px);
+      transition: opacity 140ms ease, transform 140ms ease;
+    }
+    .help:hover::after, .help:focus::after { opacity: 1; transform: translateY(0); }
+    .action-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 24px; }
+    button {
+      min-height: 44px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--teal);
+      box-shadow: 0 5px 12px rgba(8, 127, 115, 0.2);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+    }
+    button:hover { background: var(--teal-dark); }
+    button:disabled { cursor: not-allowed; opacity: 0.45; }
+    .results-section { display: grid; gap: 12px; }
+    .results-section > h2, .results-section > h3 { margin: 4px 0 0; }
+    .card { padding: 18px; box-shadow: 0 5px 18px rgba(25, 50, 60, 0.05); }
+    .card strong { color: var(--teal-dark); }
+    #results, #evaluation { display: grid; gap: 10px; }
+    #status { min-height: 22px; font-size: 0.9rem; }
     pre { white-space: pre-wrap; word-break: break-word; }
-    @media (max-width: 800px) { .row { grid-template-columns: 1fr; } }
+    @media (max-width: 720px) {
+      .app-shell { width: 94vw; padding-top: 18px; }
+      .app-bar, .action-row { align-items: flex-start; flex-direction: column; }
+      .settings-grid { grid-template-columns: 1fr; gap: 14px; }
+      .status-pill { align-self: flex-start; }
+      .help::after { left: -8px; bottom: 24px; }
+    }
   </style>
 </head>
 <body>
-  <!-- Die Seite zeigt das feste Interview und die Analyseergebnisse. -->
-  <h1>Transcript Pattern Analyzer</h1>
-  <p class="muted">Das Standardtranskript wird geladen und kann vor der Analyse bearbeitet werden.</p>
+  <main class="app-shell">
+    <header class="app-bar">
+      <div class="brand">
+        <div class="brand-mark">T</div>
+        <div>
+          <h1>Transcript Pattern Analyzer</h1>
+          <p class="subtitle">Lokale Interviewanalyse mit Ollama</p>
+        </div>
+      </div>
+      <div class="status-pill">LOCAL WORKSPACE</div>
+    </header>
 
-  <!-- Bereich zum Anzeigen und Analysieren des geladenen Transcripts. -->
-  <div class="row">
-    <section>
-      <h2>Interview-Transkript</h2>
-      <div id="transcriptStatus" class="muted">Interview.txt wird geladen...</div>
-      <textarea id="transcript" placeholder="Transkript hier einfügen oder bearbeiten..."></textarea>
-      <h3>Analyse-Einstellungen</h3>
-      <label for="model">Ollama-Modell</label>
-      <select id="model"><option value="">Standardmodell laden...</option></select>
-      <label for="device">Verarbeitung</label>
-      <select id="device">
-        <option value="auto" selected>Automatisch (GPU/CPU)</option>
-        <option value="gpu">GPU bevorzugen</option>
-        <option value="cpu">Nur CPU</option>
-      </select>
-      <label for="timeout">Timeout in Sekunden</label>
-      <input id="timeout" type="number" min="5" max="600" step="1" value="300" />
-      <label for="chunkSize">Chunk-Größe in Zeichen</label>
-      <input id="chunkSize" type="number" min="500" max="20000" step="100" value="2000" />
-      <label for="temperature">Temperatur</label>
-      <input id="temperature" type="number" min="0" max="2" step="0.1" value="0" />
-      <label for="topK">Top-K</label>
-      <input id="topK" type="number" min="1" max="100" step="1" value="1" />
-      <label for="topP">Top-P</label>
-      <input id="topP" type="number" min="0" max="1" step="0.05" value="1" />
-      <label for="seed">Seed</label>
-      <input id="seed" type="number" min="0" max="2147483647" step="1" value="42" />
-      <label for="outputTokens">Maximale Ausgabetokens</label>
-      <input id="outputTokens" type="number" min="128" max="2048" step="64" value="512" />
-      <br />
-      <button id="analyzeButton" onclick="analyzeInterview()" disabled>Interview analysieren</button>
-    </section>
-  </div>
+    <div class="workspace">
+      <section class="panel transcript-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Interview-Transkript</h2>
+            <p id="transcriptStatus" class="muted">Interview.txt wird geladen...</p>
+          </div>
+        </div>
+        <textarea id="transcript" placeholder="Transkript hier einfügen oder bearbeiten..."></textarea>
+        <div id="transcriptCharacterCount" class="muted">0 Zeichen</div>
+      </section>
 
-  <!-- Analyseergebnisse werden hier dynamisch eingefügt. -->
-  <h2>Ergebnis</h2>
-  <div id="status" class="muted"></div>
-  <div id="results"></div>
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Analyse-Einstellungen</h2>
+            <p class="muted">Parameter für den nächsten lokalen Lauf</p>
+          </div>
+        </div>
+        <div class="settings-grid">
+          <div class="field"><label for="model">Ollama-Modell <span class="help" tabindex="0" data-tooltip="Das lokale Sprachmodell, das die Muster im Transkript erkennt.">?</span></label><select id="model"><option value="">Standardmodell laden...</option></select></div>
+          <div class="field"><label for="device">Verarbeitung <span class="help" tabindex="0" data-tooltip="auto wählt automatisch. GPU bevorzugen nutzt verfügbare GPU-Ressourcen.">?</span></label><select id="device"><option value="auto" selected>Automatisch (GPU/CPU)</option><option value="gpu">GPU bevorzugen</option><option value="cpu">Nur CPU</option></select></div>
+          <div class="field"><label for="timeout">Timeout in Sekunden <span class="help" tabindex="0" data-tooltip="Maximale Wartezeit pro Ollama-Anfrage, bevor der Lauf als fehlgeschlagen gilt.">?</span></label><input id="timeout" type="number" min="5" max="600" step="1" value="300" /></div>
+          <div class="field"><label for="chunkSize">Chunk-Größe in Zeichen <span class="help" tabindex="0" data-tooltip="Teilt lange Transkripte in kleinere Textabschnitte für einzelne Modellanfragen.">?</span></label><input id="chunkSize" type="number" min="500" max="20000" step="100" value="2000" /></div>
+          <div class="field"><label for="temperature">Temperatur <span class="help" tabindex="0" data-tooltip="Steuert die Zufälligkeit. 0 ist reproduzierbar, höhere Werte erzeugen vielfältigere Antworten.">?</span></label><input id="temperature" type="number" min="0" max="2" step="0.1" value="0" /></div>
+          <div class="field"><label for="topK">Top-K <span class="help" tabindex="0" data-tooltip="Begrenzt die Auswahl auf die K wahrscheinlichsten nächsten Tokens.">?</span></label><input id="topK" type="number" min="1" max="100" step="1" value="1" /></div>
+          <div class="field"><label for="topP">Top-P <span class="help" tabindex="0" data-tooltip="Steuert die Auswahl über eine kumulierte Wahrscheinlichkeit. 1 lässt alle Kandidaten zu.">?</span></label><input id="topP" type="number" min="0" max="1" step="0.05" value="1" /></div>
+          <div class="field"><label for="seed">Seed <span class="help" tabindex="0" data-tooltip="Fester Startwert für reproduzierbarere Modellantworten bei gleichen Parametern.">?</span></label><input id="seed" type="number" min="0" max="2147483647" step="1" value="42" /></div>
+          <div class="field"><label for="outputTokens">Maximale Ausgabetokens <span class="help" tabindex="0" data-tooltip="Maximale Länge der strukturierten JSON-Antwort pro Modellanfrage.">?</span></label><input id="outputTokens" type="number" min="128" max="2048" step="64" value="512" /></div>
+        </div>
+        <div class="action-row"><span class="muted">Ergebnis und Evaluation werden automatisch archiviert.</span><button id="analyzeButton" onclick="analyzeInterview()" disabled>Interview analysieren</button></div>
+      </section>
 
-  <h3>Evaluation</h3>
-  <div id="evaluation"></div>
+      <section class="results-section">
+        <h2>Ergebnis</h2>
+        <div id="status" class="muted"></div>
+        <div id="deviceInfo" class="card">Geräteinformationen werden geladen...</div>
+        <div id="results"></div>
+        <h3>Evaluation</h3>
+        <div id="evaluation"></div>
+      </section>
+    </div>
+  </main>
 
 <script>
 // Zeigt Lade-, Erfolgs- oder Fehlermeldungen an.
 function setStatus(text) {
   document.getElementById('status').textContent = text;
+}
+
+function updateTranscriptCharacterCount() {
+  const transcript = document.getElementById('transcript').value;
+  document.getElementById('transcriptCharacterCount').textContent = `${transcript.length} Zeichen`;
+}
+
+function renderDeviceInfo(data) {
+  const container = document.getElementById('deviceInfo');
+  if (!data) {
+    container.textContent = 'Geräteinformationen nicht verfügbar.';
+    return;
+  }
+  const value = item => item == null || item === '' ? 'nicht verfügbar' : escapeHtml(item);
+  container.innerHTML = `
+    <strong>Geräteinformationen</strong>
+    <div>CPU: ${value(data.cpu_name)}</div>
+    <div>GPU: ${value(data.gpu_name)}${data.gpu_vram_gb == null ? '' : ` (${value(data.gpu_vram_gb)} GB VRAM)`}</div>
+    <div>RAM: ${value(data.ram_gb)} GB</div>
+    <div>Ollama-Modell: ${value(data.selected_ollama_model)}</div>
+    <div>Angefordert: <b>${value(data.requested_device)}</b> | Tatsächlich genutzt: <b>${value(data.actual_runtime_device)}</b></div>
+    <div class="muted">${value(data.ollama_runtime?.reason)}</div>
+  `;
 }
 
 function renderEvaluation(data) {
@@ -168,6 +344,7 @@ async function loadTranscript() {
     return;
   }
   document.getElementById('transcript').value = data.transcript;
+  updateTranscriptCharacterCount();
   status.textContent = 'interview.txt geladen.';
   analyzeButton.disabled = false;
 }
@@ -188,6 +365,16 @@ async function loadModels() {
     option.textContent = model;
     select.appendChild(option);
   });
+}
+
+async function loadDeviceInfo() {
+  try {
+    const response = await fetch('/device-info');
+    const data = await response.json();
+    renderDeviceInfo(response.ok ? data : null);
+  } catch {
+    renderDeviceInfo(null);
+  }
 }
 
 // Startet die Musteranalyse des vorhandenen Interviews.
@@ -219,6 +406,7 @@ async function analyzeInterview() {
     return;
   }
   setStatus(`Fertig. Modell: ${data.model}`);
+  renderDeviceInfo(data.device_info);
   render(data);
 
   setStatus('Analyse fertig. Werte werden evaluiert...');
@@ -235,13 +423,14 @@ async function analyzeInterview() {
 
 document.getElementById('transcript').addEventListener('input', event => {
   const hasTranscript = Boolean(event.target.value.trim());
+  updateTranscriptCharacterCount();
   document.getElementById('analyzeButton').disabled = !hasTranscript;
   if (hasTranscript) {
     document.getElementById('transcriptStatus').textContent = 'Eigenes Skript bereit.';
   }
 });
 // Lädt das Standardtranskript und die Modelle direkt beim Öffnen der Seite.
-Promise.all([loadTranscript(), loadModels()]).catch(() => setStatus('Einstellungen konnten nicht geladen werden.'));
+Promise.all([loadTranscript(), loadModels(), loadDeviceInfo()]).catch(() => setStatus('Einstellungen konnten nicht geladen werden.'));
 </script>
 </body>
 </html>

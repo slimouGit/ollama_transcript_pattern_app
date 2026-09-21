@@ -28,6 +28,7 @@ class AnalysisResponse(BaseModel):
     chunk_count: int = 0
     failed_chunks: list[int] = Field(default_factory=list)
     parameters: dict[str, int | float | str | None] = Field(default_factory=dict)
+    device_info: dict[str, object] = Field(default_factory=dict)
 
 
 class AnalysisRequest(BaseModel):

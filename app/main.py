@@ -6,6 +6,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 
 from .analyzer import analyze_transcript
+from .device_info import get_device_info
 from .evaluation import evaluate_matches, load_ground_truth
 from .ollama_client import OLLAMA_MODEL, OllamaError, available_models, health
 from .result_writer import write_analysis_report
@@ -66,6 +67,13 @@ def health_check():
     return health()
 
 
+@app.get("/device-info")
+def device_info(requested_device: str = "auto", model: str | None = None):
+    if requested_device not in {"auto", "cpu", "gpu"}:
+        raise HTTPException(status_code=422, detail="requested_device muss auto, cpu oder gpu sein.")
+    return get_device_info(requested_device=requested_device, model=model)
+
+
 @app.get("/models")
 def models():
     try:
@@ -122,6 +130,10 @@ def analyze_interview(options: AnalysisRequest | None = None):
     with analysis_lock:
         cached_analysis = analysis_cache.get(cache_key)
         if cached_analysis is not None:
+            cached_analysis.device_info = get_device_info(
+                requested_device=options.device,
+                model=cached_analysis.model,
+            )
             latest_analysis = cached_analysis
             return cached_analysis
 
@@ -137,6 +149,10 @@ def analyze_interview(options: AnalysisRequest | None = None):
                 top_p=options.top_p,
                 seed=options.seed,
                 output_tokens=options.output_tokens,
+            )
+            latest_analysis.device_info = get_device_info(
+                requested_device=options.device,
+                model=latest_analysis.model,
             )
         except OllamaError as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc
