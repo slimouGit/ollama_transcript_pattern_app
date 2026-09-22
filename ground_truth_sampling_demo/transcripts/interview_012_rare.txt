@@ -1,0 +1,10 @@
+Arzt: Was ist heute passiert?
+Patient: Ich war beim Tauchen. Etwa zwanzig Minuten nach einem schnellen Aufstieg bekam ich plötzlich starke Gelenkschmerzen, Schwindel und ein Kribbeln in beiden Beinen.
+Arzt: Haben Sie Schwierigkeiten beim Atmen?
+Patient: Etwas, ja. Außerdem fühle ich mich seit dem Auftauchen ungewöhnlich benommen.
+Arzt: Wie tief waren Sie?
+Patient: Ungefähr dreißig Meter. Ich musste wegen eines Problems mit der Luftversorgung schneller auftauchen als geplant.
+Arzt: Hatten Sie so etwas schon einmal?
+Patient: Nein, noch nie.
+Arzt: Nehmen Sie regelmäßig Medikamente oder haben Sie Vorerkrankungen?
+Patient: Nein, ich bin sonst gesund und nehme keine Medikamente.

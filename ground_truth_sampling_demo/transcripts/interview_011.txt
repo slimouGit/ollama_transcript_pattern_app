@@ -1,0 +1,8 @@
+Ärztin: Was ist der Grund für Ihren Besuch?
+Patientin: Seit gestern habe ich einen juckenden Ausschlag an beiden Armen.
+Ärztin: Haben Sie etwas Neues gegessen oder ein neues Medikament genommen?
+Patientin: Ich habe vorgestern Amoxicillin begonnen wegen einer Nebenhöhlenentzündung.
+Ärztin: Haben Sie Atemnot oder eine geschwollene Zunge?
+Patientin: Nein, überhaupt nicht.
+Ärztin: Hatten Sie früher Allergien gegen Medikamente?
+Patientin: Bisher nicht.

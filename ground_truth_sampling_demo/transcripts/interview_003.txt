@@ -1,0 +1,8 @@
+Ärztin: Warum sind Sie heute hier?
+Patientin: Ich habe seit ungefähr zwei Wochen immer wieder Magenschmerzen nach dem Essen.
+Ärztin: Wo genau?
+Patientin: Oberhalb des Bauchnabels, eher brennend.
+Ärztin: Übelkeit oder Erbrechen?
+Patientin: Übel ist mir manchmal, erbrochen habe ich nicht.
+Ärztin: Nehmen Sie Medikamente?
+Patientin: Regelmäßig nur L-Thyroxin wegen meiner Schilddrüse.

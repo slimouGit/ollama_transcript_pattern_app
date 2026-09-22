@@ -1,0 +1,26 @@
+[
+  {
+    "pattern": "beschwerden_symptome",
+    "evidence": "EXAKTE TEXTSTELLE AUS DEM TRANSKRIPT"
+  },
+  {
+    "pattern": "frage_antwort_struktur",
+    "evidence": "FRAGE UND DIREKTE ANTWORT AUS DEM TRANSKRIPT"
+  },
+  {
+    "pattern": "zeitangabe_verlauf",
+    "evidence": "EXAKTE ZEIT- ODER VERLAUFSANGABE"
+  },
+  {
+    "pattern": "medikamente_behandlung",
+    "evidence": "EXAKTE MEDIKAMENTEN- ODER BEHANDLUNGSAUSSAGE"
+  },
+  {
+    "pattern": "vorgeschichte_risikofaktoren",
+    "evidence": "EXAKTE VORGESCHICHTE ODER RISIKOANGABE"
+  },
+  {
+    "pattern": "verneinung_ausschluss",
+    "evidence": "EXAKTE MEDIZINISCHE VERNEINUNG"
+  }
+]

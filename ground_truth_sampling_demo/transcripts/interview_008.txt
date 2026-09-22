@@ -1,0 +1,8 @@
+Arzt: Weshalb kommen Sie heute?
+Patient: Seit vier Tagen habe ich ein Druckgefühl auf der Brust, meistens beim Treppensteigen.
+Arzt: Wie lange hält das an?
+Patient: Ungefähr fünf Minuten, dann wird es in Ruhe besser.
+Arzt: Rauchen Sie?
+Patient: Ja, ungefähr zehn Zigaretten am Tag seit zwanzig Jahren.
+Arzt: Gibt es Herzerkrankungen in Ihrer Familie?
+Patient: Mein Vater hatte mit 54 einen Herzinfarkt.

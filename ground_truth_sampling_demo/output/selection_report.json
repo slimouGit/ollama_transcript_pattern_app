@@ -1,0 +1,188 @@
+{
+  "document_count": 12,
+  "cluster_count": 3,
+  "clusters": [
+    {
+      "cluster": 0,
+      "size": 5,
+      "representatives": [
+        "interview_007.txt"
+      ],
+      "members": [
+        {
+          "file": "interview_003.txt",
+          "distance_to_centroid": 0.8188
+        },
+        {
+          "file": "interview_005.txt",
+          "distance_to_centroid": 0.7976
+        },
+        {
+          "file": "interview_007.txt",
+          "distance_to_centroid": 0.7878
+        },
+        {
+          "file": "interview_009.txt",
+          "distance_to_centroid": 0.8062
+        },
+        {
+          "file": "interview_011.txt",
+          "distance_to_centroid": 0.7895
+        }
+      ]
+    },
+    {
+      "cluster": 1,
+      "size": 3,
+      "representatives": [
+        "interview_012_rare.txt"
+      ],
+      "members": [
+        {
+          "file": "interview_001.txt",
+          "distance_to_centroid": 0.753
+        },
+        {
+          "file": "interview_006.txt",
+          "distance_to_centroid": 0.7405
+        },
+        {
+          "file": "interview_012_rare.txt",
+          "distance_to_centroid": 0.7317
+        }
+      ]
+    },
+    {
+      "cluster": 2,
+      "size": 4,
+      "representatives": [
+        "interview_002.txt"
+      ],
+      "members": [
+        {
+          "file": "interview_002.txt",
+          "distance_to_centroid": 0.7626
+        },
+        {
+          "file": "interview_004.txt",
+          "distance_to_centroid": 0.7981
+        },
+        {
+          "file": "interview_008.txt",
+          "distance_to_centroid": 0.7934
+        },
+        {
+          "file": "interview_010.txt",
+          "distance_to_centroid": 0.7974
+        }
+      ]
+    }
+  ],
+  "outliers": [
+    {
+      "file": "interview_008.txt",
+      "mean_cosine_distance": 0.8243,
+      "reason": "inhaltlich ungewöhnlich im Vergleich zum restlichen Korpus"
+    },
+    {
+      "file": "interview_003.txt",
+      "mean_cosine_distance": 0.8197,
+      "reason": "inhaltlich ungewöhnlich im Vergleich zum restlichen Korpus"
+    }
+  ],
+  "recommended_for_manual_ground_truth": [
+    "interview_002.txt",
+    "interview_003.txt",
+    "interview_007.txt",
+    "interview_008.txt",
+    "interview_012_rare.txt"
+  ],
+  "document_metadata": [
+    {
+      "file": "interview_001.txt",
+      "characters": 559,
+      "question_marks": 5,
+      "negation_hits": 2,
+      "medication_terms": 1
+    },
+    {
+      "file": "interview_002.txt",
+      "characters": 366,
+      "question_marks": 4,
+      "negation_hits": 1,
+      "medication_terms": 2
+    },
+    {
+      "file": "interview_003.txt",
+      "characters": 383,
+      "question_marks": 4,
+      "negation_hits": 1,
+      "medication_terms": 1
+    },
+    {
+      "file": "interview_004.txt",
+      "characters": 350,
+      "question_marks": 4,
+      "negation_hits": 1,
+      "medication_terms": 0
+    },
+    {
+      "file": "interview_005.txt",
+      "characters": 380,
+      "question_marks": 4,
+      "negation_hits": 2,
+      "medication_terms": 1
+    },
+    {
+      "file": "interview_006.txt",
+      "characters": 365,
+      "question_marks": 4,
+      "negation_hits": 2,
+      "medication_terms": 2
+    },
+    {
+      "file": "interview_007.txt",
+      "characters": 342,
+      "question_marks": 4,
+      "negation_hits": 3,
+      "medication_terms": 0
+    },
+    {
+      "file": "interview_008.txt",
+      "characters": 403,
+      "question_marks": 4,
+      "negation_hits": 0,
+      "medication_terms": 0
+    },
+    {
+      "file": "interview_009.txt",
+      "characters": 320,
+      "question_marks": 4,
+      "negation_hits": 1,
+      "medication_terms": 1
+    },
+    {
+      "file": "interview_010.txt",
+      "characters": 366,
+      "question_marks": 4,
+      "negation_hits": 2,
+      "medication_terms": 2
+    },
+    {
+      "file": "interview_011.txt",
+      "characters": 452,
+      "question_marks": 4,
+      "negation_hits": 3,
+      "medication_terms": 3
+    },
+    {
+      "file": "interview_012_rare.txt",
+      "characters": 682,
+      "question_marks": 5,
+      "negation_hits": 4,
+      "medication_terms": 2
+    }
+  ],
+  "backend": "tfidf",
+  "embedding_model": null
+}

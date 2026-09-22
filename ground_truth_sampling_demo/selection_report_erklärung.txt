@@ -1,0 +1,104 @@
+Wie man die selection_report.json liest
+
+Die Datei selection_report.json ist kein fertiger Ground-Truth-Datensatz. Sie ist ein Auswahlbericht, den das Programm cluster_transcripts.py automatisch erzeugt.
+
+Der Zweck ist: Aus vielen Transkripten eine kleine, sinnvolle Stichprobe für manuelle Annotation zu wählen.
+
+Die Datei enthält mehrere wichtige Abschnitte:
+
+1. document_count und cluster_count
+
+- document_count = 12
+- cluster_count = 4
+
+Das bedeutet:
+- Es gibt 12 Interview-Transkripte.
+- Das Programm hat diese 12 Texte in 4 Gruppen eingeteilt.
+
+Diese Gruppen nennt man Cluster. Dokumente im gleichen Cluster sind inhaltlich ähnlicher.
+
+2. clusters
+
+Dieser Bereich zeigt die einzelnen Cluster.
+
+Beispiel:
+- Cluster 0
+- size: 5
+- representatives: ["interview_007.txt"]
+
+Das heißt:
+- 5 Dokumente gehören zu diesem Cluster.
+- interview_007.txt ist der typische Vertreter dieses Clusters.
+- Die anderen Dokumente im Cluster sind die Mitglieder.
+
+Die Einträge unter members zeigen die einzelnen Dateien und ihre Distanz zum Clusterzentrum.
+
+Beispiel:
+- interview_003.txt, distance_to_centroid: 0.8188
+
+Das ist ein Maß dafür, wie nah oder fern das Dokument vom typischen Muster dieses Clusters liegt.
+
+3. outliers
+
+Dieser Abschnitt zeigt Ausreißer.
+
+Beispiel:
+- interview_008.txt
+- interview_003.txt
+
+Zusätzlich steht die Distanz, z. B.:
+- interview_008.txt (Distanz 0.8243)
+- interview_003.txt (Distanz 0.8197)
+
+Das bedeutet:
+- Diese Dokumente weichen deutlich von den anderen ab.
+- Sie sind ungewöhnlich oder inhaltlich sehr unterschiedlich.
+- Genau solche Fälle sollen nicht verloren gehen, obwohl sie selten sind.
+
+4. recommended_for_manual_ground_truth
+
+Das ist die wichtigste Liste.
+
+Aktuell sieht sie so aus:
+- interview_002.txt
+- interview_003.txt
+- interview_007.txt
+- interview_008.txt
+- interview_010.txt
+- interview_012_rare.txt
+
+Das bedeutet:
+- Diese Dokumente werden als sinnvollste Auswahl für die manuelle Ground Truth empfohlen.
+- Nicht alle 12 Transkripte werden annotiert, sondern nur diese besonders geeigneten Kandidaten.
+
+Diese Auswahl kombiniert zwei Ziele:
+- repräsentative Fälle aus den Clustern
+- ungewöhnliche / seltene Fälle als Ausreißer
+
+5. document_metadata
+
+Dieser Bereich enthält Zusatzinformationen pro Datei, z. B.:
+- characters = Zeichenanzahl
+- question_marks = Anzahl von Fragezeichen
+- negation_hits = Anzahl von Verneinungen
+- medication_terms = Anzahl von Medikamentenbezeichnungen
+
+Das ist nützlich, um grobe Muster zu sehen, aber es ist keine Ground Truth.
+
+Wichtige Erkenntnis:
+
+Die selection_report.json zeigt NICHT die fertige Annotation an.
+Sie ist nur ein Auswahlbericht, der die nächsten Schritte vorbereitet.
+
+Der eigentliche Ground-Truth-Datensatz entsteht erst durch manuelle Prüfung dieser ausgewählten Transkripte und das Füllen eines festen Schemas, z. B. nach dem Template in ground_truth_template.json.
+
+Zusammengefasst:
+
+- clusters = ähnliche Texte gruppieren
+- outliers = ungewöhnliche Fälle finden
+- recommended_for_manual_ground_truth = die Dateien, die manuell annotiert werden sollten
+- document_metadata = Hilfsinfos zur Charakterisierung der Texte
+
+Wenn du diese Datei liest, solltest du immer im Kopf behalten:
+
+Sie ist ein Auswahl- und Priorisierungs-Report, kein fertiger Label-Report.

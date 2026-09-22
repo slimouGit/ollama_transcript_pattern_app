@@ -1,0 +1,8 @@
+Arzt: Welche Beschwerden haben Sie?
+Patient: Seit drei Tagen habe ich Husten und Fieber bis 38,7 Grad.
+Arzt: Haben Sie Atemnot?
+Patient: Nein, ich bekomme normal Luft.
+Arzt: Haben Sie Medikamente genommen?
+Patient: Nur Paracetamol gestern Abend.
+Arzt: Gibt es relevante Vorerkrankungen?
+Patient: Ich habe seit zehn Jahren Asthma, aber normalerweise gut eingestellt.

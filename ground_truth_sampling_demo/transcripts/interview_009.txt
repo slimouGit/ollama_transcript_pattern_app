@@ -1,0 +1,8 @@
+Ärztin: Welche Beschwerden haben Sie?
+Patientin: Meine rechte Schulter tut seit drei Wochen weh, vor allem nachts.
+Ärztin: Gab es einen Unfall?
+Patientin: Nein.
+Ärztin: Können Sie den Arm über den Kopf heben?
+Patientin: Nur unter Schmerzen.
+Ärztin: Haben Sie etwas dagegen genommen?
+Patientin: Ab und zu Diclofenac-Gel.

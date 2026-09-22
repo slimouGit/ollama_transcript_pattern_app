@@ -1,0 +1,8 @@
+Arzt: Was führt Sie zu uns?
+Patient: Seit heute Morgen habe ich Kopfschmerzen und mir ist schwindelig.
+Arzt: Sind die Kopfschmerzen plötzlich aufgetreten?
+Patient: Nein, sie wurden über zwei Stunden langsam stärker.
+Arzt: Sehstörungen oder Lähmungserscheinungen?
+Patient: Nein.
+Arzt: Welche Medikamente nehmen Sie regelmäßig?
+Patient: Ramipril wegen Bluthochdruck.

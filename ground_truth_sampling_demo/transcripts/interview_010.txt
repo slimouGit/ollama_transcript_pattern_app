@@ -1,0 +1,8 @@
+Arzt: Was führt Sie zu mir?
+Patient: Ich habe seit einigen Tagen Herzklopfen und bin unruhig.
+Arzt: Wann tritt das auf?
+Patient: Meistens abends, manchmal für zehn bis fünfzehn Minuten.
+Arzt: Trinken Sie viel Kaffee oder Energy-Drinks?
+Patient: Drei bis vier Kaffee am Tag, Energy-Drinks nicht.
+Arzt: Nehmen Sie Medikamente?
+Patient: Keine regelmäßigen Medikamente.

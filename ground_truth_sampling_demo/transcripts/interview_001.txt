@@ -1,0 +1,10 @@
+Arzt: Guten Morgen. Was führt Sie zu mir?
+Patientin: Seit gestern habe ich starke Schmerzen im unteren Rücken, besonders wenn ich mich bücke.
+Arzt: Strahlen die Schmerzen aus?
+Patientin: Ja, manchmal bis ins rechte Bein.
+Arzt: Haben Sie Taubheitsgefühle oder Probleme beim Wasserlassen?
+Patientin: Nein, gar nicht.
+Arzt: Haben Sie etwas gegen die Schmerzen genommen?
+Patientin: Heute Morgen eine Ibuprofen 400. Das hat ein bisschen geholfen.
+Arzt: Gab es so etwas schon einmal?
+Patientin: Vor etwa zwei Jahren hatte ich ähnliche Beschwerden nach einem Umzug.

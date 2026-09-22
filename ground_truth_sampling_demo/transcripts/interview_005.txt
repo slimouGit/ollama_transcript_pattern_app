@@ -1,0 +1,8 @@
+Ärztin: Welche Beschwerden haben Sie derzeit?
+Patientin: Seit mehreren Monaten bin ich ständig müde und friere schnell.
+Ärztin: Hat sich Ihr Gewicht verändert?
+Patientin: Ich habe ungefähr vier Kilo zugenommen.
+Ärztin: Nehmen Sie Medikamente?
+Patientin: Nein, derzeit keine.
+Ärztin: Gibt es Schilddrüsenerkrankungen in der Familie?
+Patientin: Meine Mutter hat eine Unterfunktion.

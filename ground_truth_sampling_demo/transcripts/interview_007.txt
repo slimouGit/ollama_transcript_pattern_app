@@ -1,0 +1,8 @@
+Ärztin: Was bereitet Ihnen Probleme?
+Patientin: Ich habe seit einer Woche Schmerzen beim Wasserlassen und muss ständig zur Toilette.
+Ärztin: Haben Sie Fieber?
+Patientin: Nein.
+Ärztin: Schmerzen in der Nierengegend?
+Patientin: Auch nicht.
+Ärztin: Hatten Sie das früher schon?
+Patientin: Letztes Jahr einmal. Damals bekam ich ein Antibiotikum.

@@ -1,0 +1,8 @@
+Arzt: Was ist passiert?
+Patient: Beim Fußball bin ich gestern umgeknickt. Seitdem ist der rechte Knöchel dick und schmerzt.
+Arzt: Können Sie auftreten?
+Patient: Nur sehr schlecht.
+Arzt: Haben Sie Schmerzmittel genommen?
+Patient: Nein.
+Arzt: Frühere Verletzungen an diesem Fuß?
+Patient: Vor fünf Jahren hatte ich dort schon einmal eine Bänderdehnung.
