@@ -177,24 +177,38 @@ def _evidence_in_source(evidence: str, source_text: str) -> bool:
 def remove_duplicate_matches(
     matches: list[Match]
 ) -> list[Match]:
+    """Entfernt Duplikate, aber nur innerhalb desselben Mustertyps.
+
+    Zwei Treffer mit derselben Evidence, aber unterschiedlicher Pattern-Kategorie,
+    sind nicht doppelt; sie representieren unterschiedliche Informationen.
+    """
 
     unique_matches = []
-    seen_evidence = set()
+    seen_by_pattern: dict[str, set[str]] = {}
 
     for match in matches:
-        key = re.sub(r"\s+", " ", match.evidence.strip().lower())
+        pattern = match.pattern.strip()
+        evidence = re.sub(r"\s+", " ", match.evidence.strip().lower())
 
-        if not key or key in seen_evidence:
+        if not pattern or not evidence:
             continue
 
+        seen_for_pattern = seen_by_pattern.setdefault(pattern, set())
+
+        if evidence in seen_for_pattern:
+            continue
+
+        # Gleiche Pattern-Kategorie: kurze, ähnliche Belege werden als Duplikat verworfen.
+        # Aber unterschiedliche Pattern dürfen dieselbe Evidence behalten.
+        existing_matches = [m for m in unique_matches if m.pattern == pattern]
         if any(
-            key in re.sub(r"\s+", " ", existing.evidence.strip().lower())
-            or re.sub(r"\s+", " ", existing.evidence.strip().lower()) in key
-            for existing in unique_matches
+            evidence in re.sub(r"\s+", " ", existing.evidence.strip().lower())
+            or re.sub(r"\s+", " ", existing.evidence.strip().lower()) in evidence
+            for existing in existing_matches
         ):
             continue
 
-        seen_evidence.add(key)
+        seen_for_pattern.add(evidence)
         unique_matches.append(match)
 
     return unique_matches
