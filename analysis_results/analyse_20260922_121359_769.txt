@@ -1,0 +1,66 @@
+TRANSCRIPT PATTERN ANALYZER - ANALYSEBERICHT
+====================================================
+Zeitpunkt: 2026-09-22T12:13:59.769451+02:00
+Modell: qwen2.5:1.5b
+
+PARAMETER
+----------------------------------------------------
+model: qwen2.5:1.5b
+device: auto
+timeout_seconds: 300.0
+chunk_size: 2000
+temperature: 0.0
+top_k: 1
+top_p: 1.0
+seed: 42
+output_tokens: 512
+
+LAUF-METADATEN
+----------------------------------------------------
+Dauer Sekunden: 155.406
+Anzahl Chunks: 5
+Fehlgeschlagene Chunks: []
+Anzahl Treffer: 2
+
+DEVICE-INFORMATIONEN
+----------------------------------------------------
+Angefordert: auto
+Tatsächlich genutzt: cpu
+CPU: AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD
+GPU erkannt: True
+GPU: AMD Radeon Graphics
+GPU VRAM GB: None
+RAM GB: 30.66
+Ollama-Modell: qwen2.5:1.5b
+Runtime-Details: {'api_available': True, 'actual_runtime_device': 'cpu', 'model': 'qwen2.5:1.5b', 'size_vram_bytes': 0, 'reason': 'Ollama /api/ps size_vram ausgewertet.'}
+
+TREFFER
+----------------------------------------------------
+[1] Muster: zeitangabe_verlauf
+Evidence: Ich habe mich eben gebückt und habe sie so gehoben. Ja, okay. Und die war scheinbar sehr schwer, richtig? Ja, das waren meine Bücher.
+Begründung: Die Patientin hat Zeitangaben und Beschreibungen der Dauer und Schwere des Schmerzes gegeben.
+Confidence: 0.9000 (90.0 %)
+
+[2] Muster: beschwerden_symptome
+Evidence: Frau Meier, es freut mich, dass Sie noch so einen Humor haben, in solch einer schwierigen Situation. Das ist sehr gut. Meinen Humor werde ich nie verlieren. Das habe ich mir versprochen. Egal wie sehr es weh tut. Und es tut sehr weh, ich sage es Ihnen.
+Begründung: Frau Meier beschreibt ihre Beschwerden und Symptome, die sie in der aktuellen Situation empfindet.
+Confidence: 0.9000 (90.0 %)
+
+EVALUATION
+----------------------------------------------------
+Ground Truth geladen: True
+Ground-Truth-Treffer: 63
+Vorhergesagte Treffer: 2
+Precision: 0.0
+Recall: 0.0
+F1: 0.0
+TP: 0 | FP: 2 | FN: 63
+
+METRIKEN NACH MUSTER
+----------------------------------------------------
+beschwerden_symptome: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=1, FN=10
+frage_antwort_struktur: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=22
+medikamente_behandlung: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=6
+verneinung_ausschluss: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=8
+vorgeschichte_risikofaktoren: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=0, FN=10
+zeitangabe_verlauf: Precision=0.0, Recall=0.0, F1=0.0, TP=0, FP=1, FN=7
